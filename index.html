@@ -3,109 +3,392 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anber - Bientôt Disponible</title>
+  <title>Anber — Bientôt Disponible</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      height: 100vh;
+      min-height: 100vh;
+      background: #0a0a0a;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
-      color: white;
+      justify-content: center;
+      padding: 40px 20px 70px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Halo doré subtil en arrière-plan */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse, rgba(212,175,55,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Lignes horizontales haut / bas */
+    .line-top,
+    .line-bottom {
+      position: fixed;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+    }
+    .line-top    { top: 0; }
+    .line-bottom { bottom: 0; }
+
+    /* Coins décoratifs */
+    .corner {
+      position: fixed;
+      width: 22px;
+      height: 22px;
+    }
+    .corner-tl { top: 18px; left: 18px;
+      border-top: 1px solid rgba(212,175,55,0.35);
+      border-left: 1px solid rgba(212,175,55,0.35); }
+    .corner-tr { top: 18px; right: 18px;
+      border-top: 1px solid rgba(212,175,55,0.35);
+      border-right: 1px solid rgba(212,175,55,0.35); }
+    .corner-bl { bottom: 46px; left: 18px;
+      border-bottom: 1px solid rgba(212,175,55,0.35);
+      border-left: 1px solid rgba(212,175,55,0.35); }
+    .corner-br { bottom: 46px; right: 18px;
+      border-bottom: 1px solid rgba(212,175,55,0.35);
+      border-right: 1px solid rgba(212,175,55,0.35); }
+
+    /* ── Logo ── */
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+
+    .logo-circle {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 22px;
+    }
+    .logo-circle::before {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.14);
+    }
+
+    /* Remplace le "A" par votre image : décommentez <img> et commentez <span> */
+    .logo-letter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 58px;
+      font-weight: 300;
+      color: #d4af37;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+    .logo-img { width: 90%; height: auto; border-radius: 50%;margin-top: 30px; } 
+
+    .brand-name {
+      font-size: 10px;
+      font-weight: 200;
+      letter-spacing: 10px;
+      color: rgba(212,175,55,0.65);
+      text-transform: uppercase;
+    }
+
+    /* ── Textes ── */
+    .collection-tag {
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 14px;
+    }
+
+    .headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 7vw, 66px);
+      font-weight: 300;
+      color: #f5f0e8;
       text-align: center;
-      padding: 20px;
+      letter-spacing: 3px;
+      line-height: 1.15;
+    }
+    .headline em {
+      font-style: italic;
+      color: #d4af37;
     }
 
-    .container {
-      max-width: 600px;
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent);
+      margin: 30px auto;
     }
 
-    /* Style pour le logo cerclé */
-    .logo-container {
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 30px auto;
-      border-radius: 50%; /* Rend le conteneur parfaitement rond */
-      border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure fine pour l'effet cerclé */
+    .description {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.48);
+      text-align: center;
+      max-width: 420px;
+      letter-spacing: 0.4px;
+      margin-bottom: 44px;
+    }
+
+    /* ── Formulaire ── */
+    .notify-form {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      overflow: hidden; /* Coupe ce qui dépasse du cercle */
+      gap: 14px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 56px;
     }
 
-    .logo-container img {
-      width: 70%; /* Ajustez selon la taille de votre logo */
-      height: 70%;
-      object-fit: contain;
+    .email-wrapper {
+      display: flex;
+      width: 100%;
+      border: 1px solid rgba(212,175,55,0.22);
+      background: rgba(255,255,255,0.03);
     }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
+    .email-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 14px 18px;
+      font-size: 11px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.75);
+    }
+    .email-input::placeholder {
+      color: rgba(255,255,255,0.22);
       letter-spacing: 2px;
-    }
-
-    p {
-      font-size: 1.2rem;
-      opacity: 0.8;
-      margin-bottom: 30px;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 10px 20px;
-      border: 1px solid white;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      margin-bottom: 30px;
+      font-size: 9px;
     }
 
     .notify-btn {
-      padding: 12px 25px;
-      background: white;
-      color: black;
+      background: #d4af37;
       border: none;
-      border-radius: 30px;
+      padding: 14px 22px;
       cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #0a0a0a;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .notify-btn:hover { background: #e8c84a; }
+    .notify-btn:active { background: #c09e2f; }
+
+    .success-msg {
+      display: none;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #d4af37;
+      text-align: center;
     }
 
-    .notify-btn:hover {
-      background: #d4af37; /* Couleur dorée au survol */
-      color: black;
+    /* ── Piliers ── */
+    .pillars {
+      display: flex;
+      gap: 44px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
+    .pillar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pillar-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(212,175,55,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pillar-icon svg {
+      width: 17px;
+      height: 17px;
+      stroke: rgba(212,175,55,0.6);
+      fill: none;
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .pillar-label {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+    }
+
+    /* ── Footer ── */
     footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.8rem;
-      opacity: 0.6;
+      position: fixed;
+      bottom: 16px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    footer span {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+    }
+    footer .dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.3);
+    }
+
+    @media (max-width: 480px) {
+      .pillars { gap: 28px; }
+      .logo-circle { width: 100px; height: 100px; }
+      .logo-letter { font-size: 44px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo-container">
-      <img src="anber.jpeg" alt="Anber Logo">
-    </div>
 
-    <div class="tag">✨ Anber - Maison de parfum</div>
-    <h1>Bientôt Disponible</h1>
-    <p>La boutique Anber arrive bientôt. Des fragrances uniques, élégantes et modernes inspirées du luxe vous attendent.</p>
-    <button class="notify-btn">Me prévenir</button>
+  <div class="line-top"></div>
+  <div class="line-bottom"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Logo -->
+  <div class="logo-area">
+    <div class="logo-circle">
+      <!-- Option A : lettre initiale -->
+      <!--<span class="logo-letter">A</span>-->
+      <!-- Option B : votre fichier image -->
+      <img class="logo-img" src="anber.png" alt="Anber">
+    </div>
+    <span class="brand-name">Anber</span>
   </div>
 
+  <!-- Headline -->
+  <p class="collection-tag">Collection 2026</p>
+  <h1 class="headline">L'Art de la <em>Fragrance</em></h1>
+
+  <div class="divider"></div>
+
+  <p class="description">
+    Des fragrances d'exception, nées du silence entre deux notes.<br>
+    Bientôt, l'expérience Anber prendra forme — pour ceux qui savent
+    que le luxe se ressent avant de se voir.
+  </p>
+
+  <!-- Formulaire notification -->
+  <div class="notify-form">
+    <div class="email-wrapper">
+      <input
+        class="email-input"
+        type="email"
+        id="emailInput"
+        placeholder="Votre adresse e-mail"
+        autocomplete="email"
+      />
+      <button class="notify-btn" onclick="handleNotify()">Me prévenir</button>
+    </div>
+    <p class="success-msg" id="successMsg">Merci — vous serez parmi les premiers informés.</p>
+  </div>
+
+  <!-- Piliers de marque -->
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+      </div>
+      <span class="pillar-label">Origine rare</span>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 3"/>
+        </svg>
+      </div>
+      <span class="pillar-label">Artisanal</span>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+      </div>
+      <span class="pillar-label">Livraison luxe</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer>
-    © 2026 Anber - Tous droits réservés
+    <span>© 2026 Anber</span>
+    <div class="dot"></div>
+    <span>Tous droits réservés</span>
   </footer>
+
+  <script>
+    function handleNotify() {
+      const input = document.getElementById('emailInput');
+      const msg   = document.getElementById('successMsg');
+      if (input.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+        msg.style.display = 'block';
+        input.value = '';
+        setTimeout(() => msg.style.display = 'none', 5000);
+      } else {
+        input.style.borderBottom = '1px solid rgba(255,90,90,0.5)';
+        input.focus();
+        setTimeout(() => input.style.borderBottom = '', 2200);
+      }
+    }
+    document.getElementById('emailInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleNotify();
+    });
+  </script>
+
 </body>
 </html>
