@@ -27,14 +27,24 @@
       max-width: 600px;
     }
 
-    .logo {
-      width: 120px;
-      height: 120px;
+    /* Style pour le logo cerclé */
+    .logo-container {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 30px auto;
+      border-radius: 50%; /* Rend le conteneur parfaitement rond */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Bordure fine pour l'effet cerclé */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      overflow: hidden; /* Coupe ce qui dépasse du cercle */
+    }
+
+    .logo-container img {
+      width: 70%; /* Ajustez selon la taille de votre logo */
+      height: 70%;
       object-fit: contain;
-      margin-bottom: 20px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.05);
-      padding: 10px;
     }
 
     h1 {
@@ -70,7 +80,7 @@
     }
 
     .notify-btn:hover {
-      background: #d4af37;
+      background: #d4af37; /* Couleur dorée au survol */
       color: black;
     }
 
@@ -84,7 +94,9 @@
 </head>
 <body>
   <div class="container">
-   
+    <div class="logo-container">
+      <img src="/anber/anber.jpeg" alt="Anber Logo">
+    </div>
 
     <div class="tag">✨ Anber - Maison de parfum</div>
     <h1>Bientôt Disponible</h1>
