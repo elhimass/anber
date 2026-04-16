@@ -2671,6 +2671,7 @@ button:focus,
 
 @media (max-width: 520px) {
   .nav-inner {
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
