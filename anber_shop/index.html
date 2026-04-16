@@ -13,7 +13,9 @@
 <body data-page="home">
   <nav>
     <div class="page-wrapper nav-inner">
-      <div class="logo">ANBER</div>
+      <div class="logo">
+        <img src="./assets/logo/logo.png" alt="Anber" class="logo-image">
+      </div>
       <div class="nav-links">
         <a href="index.html">Accueil</a>
         <a href="products.html">Boutique</a>
@@ -31,50 +33,155 @@
   <main class="page-wrapper">
     <section class="hero">
       <div class="hero-copy">
-        <p class="hero-eyebrow">Maison de Parfums</p>
-        <h1 class="hero-title">L'identité olfactive<br><em>qui vous ressemble</em></h1>
-        <p class="hero-text">Anber rassemble des fragrances iconiques et des créations sophistiquées. Découvrez la collection, explorez chaque parfum et accédez à une page dédiée pour chacune de vos envies.</p>
+        <p class="hero-eyebrow">Maison de Parfums de Luxe</p>
+        <h1 class="hero-title">L'<em>Art</em> du Parfum<br><span class="hero-subtitle">Réinventé</span></h1>
+        <p class="hero-text">Découvrez une collection exclusive de fragrances d'exception, soigneusement sélectionnées pour révéler votre essence unique. Chaque parfum est une œuvre d'art olfactive, conçue pour accompagner vos moments les plus précieux.</p>
         <div class="hero-actions">
-          <button class="btn" id="shopNowButton">Voir la boutique</button>
-          <a class="btn-outline" href="#story">Notre histoire</a>
+          <button class="btn" id="shopNowButton">Explorer la Collection</button>
+          <a class="btn-outline" href="#featured">Découvrir</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Fragrances</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Authentique</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Service</span>
+          </div>
         </div>
       </div>
       <div class="hero-visual">
-        <img src="assets/Sauvage/N1.jpg" alt="Dior Sauvage" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
-        <div class="image-fallback">Image de parfum non disponible</div>
+        <div class="hero-image-container">
+          <img src="assets/Sauvage/N1.jpg" alt="Collection Anber" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+          <div class="image-fallback">Collection de parfums de luxe</div>
+          <div class="hero-overlay">
+            <div class="hero-badge">Édition Limitée</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="featured">
       <div class="section-header">
-        <p class="hero-eyebrow">Collection</p>
-        <h2 class="section-title">Nos parfums d'exception</h2>
-        <p class="section-subtitle">Parcourez une sélection de fragrances inspirées par l'Orient, les bois, les fleurs et les compositions exclusives. Chaque création a sa page dédiée.</p>
+        <p class="hero-eyebrow">Collection Exclusive</p>
+        <h2 class="section-title">Fragrances d'Exception</h2>
+        <p class="section-subtitle">Chaque parfum raconte une histoire unique, composée d'essences rares et précieuses. Découvrez notre sélection des plus belles créations olfactives du monde.</p>
       </div>
       <div id="featuredGrid" class="feature-grid"></div>
+      <div class="section-cta">
+        <a class="btn" href="products.html">Voir Toute la Collection</a>
+      </div>
     </section>
 
     <section class="section" id="story">
       <div class="section-header">
-        <p class="hero-eyebrow">Notre maison</p>
-        <h2 class="section-title">L'art du parfum, révélé</h2>
-        <p class="section-subtitle">Anber sélectionne les classiques et les nouvelles signatures olfactives pour composer votre collection personnelle. Luxe, précision et atmosphère sont au cœur de chaque création.</p>
+        <p class="hero-eyebrow">L'Excellence Anber</p>
+        <h2 class="section-title">L'Art du Parfum Réinventé</h2>
+        <p class="section-subtitle">Depuis notre création, nous nous engageons à offrir des expériences olfactives d'exception, alliant tradition et innovation pour révéler votre essence unique.</p>
       </div>
-      <div class="product-grid">
-        <article class="feature-card">
-          <h3>Un univers identifiable</h3>
-          <p>Chaque parfum bénéficie d’une page séparée qui raconte son histoire, ses notes, ses formats et sa personnalité.</p>
+      <div class="values-grid">
+        <article class="value-card">
+          <div class="value-icon">✧</div>
+          <h3>Authenticité</h3>
+          <p>Chaque fragrance est une création originale, composée d'essences naturelles et précieuses, garantissant une qualité incomparable.</p>
         </article>
-        <article class="feature-card">
-          <h3>Une expérience fluide</h3>
-          <p>La boutique présente tous les parfums sur une page à part, avec un accès direct au détail du produit en un clic.</p>
+        <article class="value-card">
+          <div class="value-icon">✦</div>
+          <h3>Exclusivité</h3>
+          <p>Notre sélection rigoureuse privilégie les parfums rares et sophistiqués, pour une expérience unique et personnelle.</p>
         </article>
+        <article class="value-card">
+          <div class="value-icon">✧</div>
+          <h3>Expertise</h3>
+          <p>Notre équipe de parfumeurs experts vous guide dans votre choix, révélant les subtilités de chaque composition.</p>
+        </article>
+        <article class="value-card">
+          <div class="value-icon">✦</div>
+          <h3>Luxe Accessible</h3>
+          <p>Le luxe n'est pas un privilège. Nous rendons accessible l'excellence olfactive à tous les passionnés de parfums.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section luxury-section">
+      <div class="luxury-content">
+        <div class="luxury-text">
+          <h2 class="luxury-title">Une Expérience Sensorielle Unique</h2>
+          <p class="luxury-description">Chaque flacon est une invitation à l'évasion, chaque note une émotion. Découvrez comment nos parfums transcendent les sens pour devenir une extension de votre personnalité.</p>
+          <div class="luxury-features">
+            <div class="feature-item">
+              <span class="feature-check">✓</span>
+              <span>Essences 100% naturelles</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-check">✓</span>
+              <span>Tenue exceptionnelle 8-12h</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-check">✓</span>
+              <span>Service personnalisé</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-check">✓</span>
+              <span>Livraison premium</span>
+            </div>
+          </div>
+          <a class="btn luxury-btn" href="about.html">En Savoir Plus</a>
+        </div>
+        <div class="luxury-visual">
+          <div class="luxury-image-stack">
+            <img src="assets/Bleu/N1.jpg" alt="Collection Bleu de Chanel" class="luxury-image main" />
+            <img src="assets/withyou/N1.jpg" alt="Armani Stronger With You" class="luxury-image secondary" />
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="page-wrapper footer">
-    <p>© 2026 Anber — Maison de parfums</p>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="./assets/logo/logo.png" alt="Anber" class="footer-logo">
+        <p class="footer-tagline">L'art du parfum réinventé</p>
+        <p class="footer-description">Découvrez une collection exclusive de fragrances d'exception, soigneusement sélectionnées pour révéler votre essence unique.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-section">
+          <h4>Navigation</h4>
+          <a href="products.html">Boutique</a>
+          <a href="about.html">À Propos</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Service Client</h4>
+          <a href="contact.html">Nous contacter</a>
+          <a href="faq.html">Questions fréquentes</a>
+          <a href="contact.html#newsletter">Newsletter</a>
+          <a href="cart.html">Mon panier</a>
+        </div>
+        <div class="footer-section">
+          <h4>Légal</h4>
+          <a href="#">Conditions générales</a>
+          <a href="#">Politique de confidentialité</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">CGV</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-text">© 2026 Anber — Maison de parfums de luxe. Tous droits réservés.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="Facebook">📘</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+      </div>
+    </div>
   </footer>
 
   <script src="shop.js"></script>
