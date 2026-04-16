@@ -252,24 +252,29 @@ function renderProducts(filter) {
   }
   grid.innerHTML = list
     .map((product) => `
-      <article class="product-card">
-        ${createImageHTML(product)}
-        <div class="product-body">
-          <div class="product-meta">
-            <span class="product-type">${product.collection}</span>
-            <span class="product-price">${formatPrice(product.prices[product.sizes[0]])}</span>
-          </div>
-          <div>
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-copy">${product.desc}</p>
-          </div>
-          <div class="product-footer">
-            <button class="product-button" onclick="openProduct(${product.id})">Voir le parfum</button>
+      <article class="product-card-luxury">
+        <div class="product-image-luxury">
+          <img src="${product.image}" alt="${product.name}" loading="lazy">
+        </div>
+        <div class="product-info-luxury">
+          <h3 class="product-name-luxury">${product.name}</h3>
+          <span class="product-brand-luxury">${product.collection}</span>
+          <p class="product-description-luxury">${product.desc}</p>
+          <div class="product-price-luxury">${formatPrice(product.prices[product.sizes[0]])}</div>
+          <div class="product-actions-luxury">
+            <a href="product.html?id=${product.id}" class="product-btn-luxury">Voir le parfum</a>
+            <button class="product-btn-outline-luxury" onclick="addToCart(${product.id}, '${product.sizes[0]}')">Ajouter au panier</button>
           </div>
         </div>
       </article>
     `)
     .join('');
+
+  // Mettre à jour le compteur de produits
+  const countElement = document.getElementById('productCount');
+  if (countElement) {
+    countElement.textContent = `${list.length} parfum${list.length > 1 ? 's' : ''} disponible${list.length > 1 ? 's' : ''}`;
+  }
 }
 
 function openProduct(productId) {
@@ -496,8 +501,88 @@ function initHeroButtons() {
   }
 }
 
+// MOBILE MENU FUNCTIONALITY
+function initMobileMenu() {
+  const hamburger = document.querySelector('.hamburger');
+  const mobileMenuOverlay = document.createElement('div');
+  mobileMenuOverlay.className = 'mobile-menu-overlay';
+  
+  // Create mobile menu content
+  mobileMenuOverlay.innerHTML = `
+    <nav class="mobile-menu">
+      <a href="index.html">Accueil</a>
+      <a href="products.html">Boutique</a>
+      <a href="about.html">À Propos</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html" class="nav-cart">
+        <span>Panier</span>
+        <span id="cartBadgeMobile" class="cart-badge"></span>
+      </a>
+    </nav>
+  `;
+  
+  document.body.appendChild(mobileMenuOverlay);
+  
+  if (hamburger) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileMenuOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenuOverlay.classList.contains('active') ? 'hidden' : '';
+    });
+  }
+  
+  // Close menu when clicking on overlay
+  mobileMenuOverlay.addEventListener('click', (e) => {
+    if (e.target === mobileMenuOverlay) {
+      hamburger.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+  
+  // Close menu when clicking on links
+  mobileMenuOverlay.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+  
+  // Update mobile cart badge
+  function updateMobileCartBadge() {
+    const mobileBadge = document.getElementById('cartBadgeMobile');
+    if (mobileBadge) {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      mobileBadge.textContent = count;
+      mobileBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+    }
+  }
+  
+  // Update badge initially and when cart changes
+  updateMobileCartBadge();
+  // Override the original updateCartBadge to also update mobile
+  const originalUpdateCartBadge = window.updateCartBadge;
+  window.updateCartBadge = function() {
+    originalUpdateCartBadge();
+    updateMobileCartBadge();
+  };
+  
+  // Handle window resize to close mobile menu on desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 980) {
+      hamburger.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initPage();
   initHeroButtons();
+  initMobileMenu();
   updateCartBadge();
 });
