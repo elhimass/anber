@@ -1498,16 +1498,7 @@ footer {
     letter-spacing: 0.35rem;
   }
 
-  .logo-image {
-    display: none;
-  }
-
-  .logo::after {
-    content: 'ANBER';
-    text-transform: uppercase;
-    color: var(--gold);
-    letter-spacing: 0.35rem;
-  }
+ 
 
   .page-wrapper {
     width: min(100%, calc(100% - 32px));
@@ -1734,17 +1725,7 @@ footer {
     letter-spacing: 0.3rem;
   }
 
-  .logo-image {
-    display: none;
-  }
-
-  .logo::after {
-    content: 'ANBER';
-    text-transform: uppercase;
-    display: inline-block;
-    color: var(--gold);
-  }
-
+ 
   .hamburger {
     width: 28px;
     height: 28px;
@@ -2470,16 +2451,7 @@ button:focus,
     letter-spacing: 0.3rem;
   }
 
-  .logo-image {
-    display: none;
-  }
-
-  .logo::after {
-    content: 'ANBER';
-    text-transform: uppercase;
-    color: var(--gold);
-    letter-spacing: 0.3rem;
-  }
+ 
 
   .hero-actions,
   .detail-actions {
