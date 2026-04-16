@@ -120,6 +120,9 @@ function initPage() {
   if (pageType === 'product') {
     renderProductDetail();
   }
+  if (pageType === 'cart') {
+    renderCart();
+  }
 }
 
 function formatPrice(value) {
@@ -273,6 +276,135 @@ function openProduct(productId) {
   window.location.href = `product.html?id=${productId}`;
 }
 
+// Gestion du panier avec localStorage
+function addToCart(productId, size, quantity = 1) {
+  const product = products.find((item) => item.id === productId);
+  if (!product) return;
+
+  let cart = JSON.parse(localStorage.getItem('anberCart')) || [];
+  const existingItem = cart.find((item) => item.id === productId && item.size === size);
+
+  if (existingItem) {
+    existingItem.quantity += quantity;
+  } else {
+    cart.push({
+      id: productId,
+      name: product.name,
+      price: product.prices[size],
+      size: size,
+      image: product.image,
+      quantity: quantity,
+    });
+  }
+
+  localStorage.setItem('anberCart', JSON.stringify(cart));
+  showNotification('Ajouté au panier!');
+  updateCartBadge();
+}
+
+function removeFromCart(productId, size) {
+  let cart = JSON.parse(localStorage.getItem('anberCart')) || [];
+  cart = cart.filter((item) => !(item.id === productId && item.size === size));
+  localStorage.setItem('anberCart', JSON.stringify(cart));
+  updateCartBadge();
+  renderCart();
+}
+
+function updateCartQuantity(productId, size, quantity) {
+  let cart = JSON.parse(localStorage.getItem('anberCart')) || [];
+  const item = cart.find((item) => item.id === productId && item.size === size);
+  if (item) {
+    item.quantity = Math.max(1, quantity);
+    localStorage.setItem('anberCart', JSON.stringify(cart));
+    updateCartBadge();
+    renderCart();
+  }
+}
+
+function getCart() {
+  return JSON.parse(localStorage.getItem('anberCart')) || [];
+}
+
+function getCartTotal() {
+  const cart = getCart();
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+
+function showNotification(message) {
+  const notif = document.createElement('div');
+  notif.className = 'notification';
+  notif.textContent = message;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 3000);
+}
+
+function updateCartBadge() {
+  const cart = getCart();
+  const badge = document.getElementById('cartBadge');
+  if (badge) {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+function renderCart() {
+  const cartContainer = document.getElementById('cartContent');
+  if (!cartContainer) return;
+
+  const cart = getCart();
+  if (cart.length === 0) {
+    cartContainer.innerHTML = `
+      <div class="cart-empty">
+        <p>Votre panier est vide</p>
+        <a class="btn" href="products.html">Retour à la boutique</a>
+      </div>
+    `;
+    return;
+  }
+
+  const cartItems = cart
+    .map(
+      (item) => `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
+        <div class="cart-item-info">
+          <h3>${item.name}</h3>
+          <p class="cart-item-meta">${item.size}</p>
+        </div>
+        <div class="cart-item-quantity">
+          <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity - 1})">−</button>
+          <input type="number" value="${item.quantity}" onchange="updateCartQuantity(${item.id}, '${item.size}', this.value)" />
+          <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity + 1})">+</button>
+        </div>
+        <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id}, '${item.size}')">✕</button>
+      </div>
+    `
+    )
+    .join('');
+
+  cartContainer.innerHTML = `
+    <div class="cart-items">${cartItems}</div>
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>Sous-total</span>
+        <span>${formatPrice(getCartTotal())}</span>
+      </div>
+      <div class="summary-row">
+        <span>Livraison</span>
+        <span>À calculer</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>${formatPrice(getCartTotal())}</span>
+      </div>
+      <button class="btn" style="width:100%; margin-top:24px;">Procéder au paiement</button>
+      <a class="btn-outline" href="products.html" style="width:100%; text-align:center;">Continuer vos achats</a>
+    </div>
+  `;
+}
+
 function renderProductDetail() {
   const details = document.getElementById('productDetail');
   const params = new URLSearchParams(window.location.search);
@@ -290,6 +422,7 @@ function renderProductDetail() {
   selectedSize = product.sizes[0];
   updateGalleryImages(product);
   const notes = product.notes.map((note) => `<span class="tag">${note}</span>`).join('');
+
   details.innerHTML = `
     <div class="detail-grid">
       <div>${createGalleryHTML(product)}</div>
@@ -299,19 +432,32 @@ function renderProductDetail() {
         <p class="detail-secondary">${product.sub}</p>
         <div class="detail-rating">★★★★★ <span>${product.rating}</span></div>
         <p class="detail-copy">${product.desc}</p>
-        <div>
-          <h3 class="section-title" style="font-size:1.6rem; margin-bottom:16px;">Notes olfactives</h3>
+
+        <div class="detail-benefits">
+          <h3 class="section-title" style="font-size:1.2rem; margin: 24px 0 12px;">Caractéristiques</h3>
+          <ul class="benefits-list">
+            <li>✧ Fragrance de qualité premium</li>
+            <li>✧ Longue tenue (8-12 heures)</li>
+            <li>✧ Notes sophistiquées et complexes</li>
+            <li>✧ Idéal pour toute occasion</li>
+          </ul>
+        </div>
+
+        <div style="margin: 24px 0;">
+          <h3 class="section-title" style="font-size:1.2rem; margin-bottom:12px;">Notes olfactives</h3>
           <div class="detail-tags">${notes}</div>
         </div>
-        <div>
-          <h3 class="section-title" style="font-size:1.6rem; margin-bottom:16px;">Contenances</h3>
+
+        <div style="margin: 24px 0;">
+          <h3 class="section-title" style="font-size:1.2rem; margin-bottom:12px;">Sélectionner la contenance</h3>
           <div class="sizes-list" id="sizesList"></div>
         </div>
+
         <div class="detail-footer">
           <p class="detail-price" id="detailPrice">${formatPrice(product.prices[selectedSize])}</p>
           <div class="detail-actions">
-            <button class="detail-action" onclick="location.href='products.html'">Retour boutique</button>
-            <button class="detail-action outline" onclick="alert('Merci de votre intérêt !');">Contactez-nous</button>
+            <button class="detail-action" onclick="addToCart(${product.id}, '${selectedSize}', 1)" style="background: var(--gold); color: #080808;">Ajouter au panier</button>
+            <button class="detail-action outline" onclick="location.href='contact.html'">Contactez-nous</button>
           </div>
         </div>
       </div>
@@ -353,4 +499,5 @@ function initHeroButtons() {
 window.addEventListener('DOMContentLoaded', () => {
   initPage();
   initHeroButtons();
+  updateCartBadge();
 });

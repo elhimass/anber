@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anber — Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="./assets/logo/logo.png">
+</head>
+<body data-page="contact">
+  <nav>
+    <div class="page-wrapper nav-inner">
+      <div class="logo">ANBER</div>
+      <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Boutique</a>
+        <a href="about.html">À Propos</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" class="nav-cart">
+          <span>Panier</span>
+          <span id="cartBadge" class="cart-badge"></span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="section">
+      <div class="section-header">
+        <p class="hero-eyebrow">Nous Contacter</p>
+        <h2 class="section-title">Parlons de Parfums</h2>
+        <p class="section-subtitle">Des questions sur nos fragrances ? Besoin de conseils pour trouver votre signature ? Notre équipe est là pour vous aider.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-form-wrapper">
+          <form class="contact-form" id="contactForm">
+            <div class="form-group">
+              <label for="name">Nom</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Sujet</label>
+              <select id="subject" name="subject" required>
+                <option value="">Sélectionner un sujet</option>
+                <option value="question">Question sur un parfum</option>
+                <option value="conseil">Demande de conseil</option>
+                <option value="commande">Question sur une commande</option>
+                <option value="partenariat">Partenariat</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="6" placeholder="Votre message..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; margin-top: 16px;">Envoyer le Message</button>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <div class="info-card">
+            <h3>Email</h3>
+            <p><a href="mailto:hello@anber.com">hello@anber.com</a></p>
+          </div>
+
+          <div class="info-card">
+            <h3>Téléphone</h3>
+            <p><a href="tel:+33123456789">+33 (1) 23 45 67 89</a></p>
+          </div>
+
+          <div class="info-card">
+            <h3>Adresse</h3>
+            <p>12 Rue de la Paix<br/>75000 Paris<br/>France</p>
+          </div>
+
+          <div class="info-card">
+            <h3>Horaires</h3>
+            <p>Lundi - Vendredi: 10h - 18h<br/>Samedi: 11h - 17h<br/>Dimanche: Fermé</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 60px;">
+        <h3 class="section-title" style="font-size: 2rem; margin-bottom: 24px;">Inscrivez-vous à Notre Infolettre</h3>
+        <p style="color: var(--muted); margin-bottom: 20px;">Recevez nos dernières fragrances, conseils beauté et offres exclusives directement dans votre boîte mail.</p>
+        <form class="newsletter-form" id="newsletterForm">
+          <input type="email" placeholder="Votre adresse email" required>
+          <button type="submit" class="btn">S'inscrire</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-wrapper footer">
+    <div class="footer-inner">
+      <p class="footer-text">© 2026 Anber — Maison de parfums</p>
+      <a class="btn-outline" href="index.html">Retour à l'accueil</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Merci pour votre message ! Nous vous répondrons bientôt.');
+      this.reset();
+    });
+
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Vous êtes inscrit à notre infolettre !');
+      this.reset();
+    });
+  </script>
+  <script src="shop.js"></script>
+</body>
+</html>
