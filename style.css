@@ -1717,8 +1717,20 @@ footer {
     padding: 0 1rem;
   }
 
+  .logo {
+    font-size: 1.25rem;
+    letter-spacing: 0.3rem;
+  }
+
   .logo-image {
-    height: 45px;
+    display: none;
+  }
+
+  .logo::after {
+    content: 'ANBER';
+    text-transform: uppercase;
+    display: inline-block;
+    color: var(--gold);
   }
 
   .hamburger {
