@@ -141,27 +141,32 @@ nav {
   cursor: pointer;
   padding: 0;
   z-index: 1001;
+  position: relative;
 }
 
 .hamburger span {
   width: 30px;
   height: 3px;
-  background: var(--gold);
+  background: linear-gradient(90deg, var(--gold), #f4e87c);
   border-radius: 2px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   transform-origin: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .hamburger.active span:nth-child(1) {
   transform: rotate(45deg) translate(6px, 6px);
+  background: var(--gold);
 }
 
 .hamburger.active span:nth-child(2) {
   opacity: 0;
+  transform: translateX(10px);
 }
 
 .hamburger.active span:nth-child(3) {
   transform: rotate(-45deg) translate(6px, -6px);
+  background: var(--gold);
 }
 
 /* MOBILE MENU OVERLAY */
@@ -1550,16 +1555,52 @@ footer {
 /* MOBILE LARGE (720px et moins) */
 @media (max-width: 768px) {
   .nav-inner {
-    padding: 0 1rem;
-    min-height: 70px;
+    padding: 0 1.5rem;
+    min-height: 75px;
   }
 
   .logo {
-    font-size: 1.2rem;
-    letter-spacing: 0.35rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.4rem;
+    color: var(--gold);
+    text-shadow: 0 2px 6px rgba(201, 168, 76, 0.25);
+    font-weight: 500;
   }
 
- 
+  .logo::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.5;
+  }
+
+  .hamburger {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+    border-radius: 6px;
+    background: rgba(201, 168, 76, 0.03);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hamburger:hover {
+    background: rgba(201, 168, 76, 0.06);
+    border-color: rgba(201, 168, 76, 0.3);
+    transform: scale(1.05);
+  }
+
+  .hamburger span {
+    width: 18px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), #f4e87c);
+    border-radius: 1px;
+  }
 
   .page-wrapper {
     width: min(100%, calc(100% - 32px));
@@ -1762,7 +1803,7 @@ footer {
 /* MOBILE SMALL (520px et moins) */
 @media (max-width: 480px) {
   body {
-    padding-top: 70px;
+    padding-top: 75px;
   }
 
   nav {
@@ -1771,30 +1812,119 @@ footer {
     left: 0;
     right: 0;
     z-index: 1000;
+    background: linear-gradient(135deg, rgba(8, 8, 8, 0.96), rgba(12, 12, 12, 0.96));
+    backdrop-filter: blur(25px) saturate(1.1);
+    -webkit-backdrop-filter: blur(25px) saturate(1.1);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4), 0 0 40px rgba(201, 168, 76, 0.08);
+  }
+
+  nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(201, 168, 76, 0.06), transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(201, 168, 76, 0.04), transparent 40%);
+    pointer-events: none;
   }
 
   .nav-inner {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    min-height: 70px;
-    padding: 0 1rem;
+    min-height: 75px;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
   }
 
   .logo {
-    font-size: 1.25rem;
-    letter-spacing: 0.3rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.4rem;
+    color: var(--gold);
+    text-shadow: 0 2px 8px rgba(201, 168, 76, 0.3);
+    font-weight: 500;
+    position: relative;
   }
 
- 
+  .logo::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.6;
+  }
+
   .hamburger {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(201, 168, 76, 0.05);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hamburger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.1), rgba(201, 168, 76, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hamburger:hover {
+    background: rgba(201, 168, 76, 0.08);
+    border-color: rgba(201, 168, 76, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
+  }
+
+  .hamburger:hover::before {
+    opacity: 1;
   }
 
   .hamburger span {
-    width: 28px;
+    width: 20px;
     height: 2px;
+    background: linear-gradient(90deg, var(--gold), #f4e87c);
+    border-radius: 1px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hamburger.active {
+    background: rgba(201, 168, 76, 0.15);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
   }
 
   .page-wrapper {
@@ -2507,11 +2637,51 @@ button:focus,
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    min-height: 75px;
+    padding: 0 1.5rem;
   }
 
   .logo {
-    font-size: 1.1rem;
-    letter-spacing: 0.3rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.35rem;
+    color: var(--gold);
+    text-shadow: 0 2px 6px rgba(201, 168, 76, 0.25);
+    font-weight: 500;
+  }
+
+  .logo::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.5;
+  }
+
+  .hamburger {
+    width: 28px;
+    height: 28px;
+    padding: 5px;
+    border-radius: 5px;
+    background: rgba(201, 168, 76, 0.03);
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hamburger:hover {
+    background: rgba(201, 168, 76, 0.06);
+    border-color: rgba(201, 168, 76, 0.3);
+    transform: scale(1.05);
+  }
+
+  .hamburger span {
+    width: 16px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), #f4e87c);
+    border-radius: 1px;
   }
 
  
