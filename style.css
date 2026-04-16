@@ -1856,7 +1856,6 @@ footer {
 
   .nav-inner {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -2670,15 +2669,7 @@ button:focus,
 }
 
 @media (max-width: 520px) {
-  .nav-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    gap: 16px;
-    min-height: 75px;
-    padding: 0 1.5rem;
-  }
+   
 
   .logo {
     display: inline-flex;
