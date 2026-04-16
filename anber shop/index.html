@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anber — Maison de Parfums</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+  <nav>
+    <div class="page-wrapper nav-inner">
+      <div class="logo">ANBER</div>
+      <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Boutique</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Maison de Parfums</p>
+        <h1 class="hero-title">L'identité olfactive<br><em>qui vous ressemble</em></h1>
+        <p class="hero-text">Anber rassemble des fragrances iconiques et des créations sophistiquées. Découvrez la collection, explorez chaque parfum et accédez à une page dédiée pour chacune de vos envies.</p>
+        <div class="hero-actions">
+          <button class="btn" id="shopNowButton">Voir la boutique</button>
+          <a class="btn-outline" href="#story">Notre histoire</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/Sauvage/N1.jpg" alt="Dior Sauvage" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'" />
+        <div class="image-fallback">Image de parfum non disponible</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <p class="hero-eyebrow">Collection</p>
+        <h2 class="section-title">Nos parfums d'exception</h2>
+        <p class="section-subtitle">Parcourez une sélection de fragrances inspirées par l'Orient, les bois, les fleurs et les compositions exclusives. Chaque création a sa page dédiée.</p>
+      </div>
+      <div id="featuredGrid" class="feature-grid"></div>
+    </section>
+
+    <section class="section" id="story">
+      <div class="section-header">
+        <p class="hero-eyebrow">Notre maison</p>
+        <h2 class="section-title">L'art du parfum, révélé</h2>
+        <p class="section-subtitle">Anber sélectionne les classiques et les nouvelles signatures olfactives pour composer votre collection personnelle. Luxe, précision et atmosphère sont au cœur de chaque création.</p>
+      </div>
+      <div class="product-grid">
+        <article class="feature-card">
+          <h3>Un univers identifiable</h3>
+          <p>Chaque parfum bénéficie d’une page séparée qui raconte son histoire, ses notes, ses formats et sa personnalité.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Une expérience fluide</h3>
+          <p>La boutique présente tous les parfums sur une page à part, avec un accès direct au détail du produit en un clic.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-wrapper footer">
+    <p>© 2026 Anber — Maison de parfums</p>
+  </footer>
+
+  <script src="shop.js"></script>
+</body>
+</html>
