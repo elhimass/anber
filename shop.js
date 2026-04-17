@@ -105,7 +105,7 @@ function createImageHTML(product, classes = '') {
   return `
     <div class="product-image ${classes}">
       <img src="${product.image}" alt="${product.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'" />
-      <div class="image-fallback">Visuel non disponible</div>
+     
     </div>
   `;
 }
