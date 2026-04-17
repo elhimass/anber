@@ -356,7 +356,7 @@ async function submitOrder(e) {
   submitBtn.disabled = true;
 
   try {
-    const response = await fetch('http://localhost:3001/api/submit-order', {
+    const response = await fetch('https://anber-backend.onrender.com/api/submit-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
