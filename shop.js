@@ -63,7 +63,7 @@ const products = [
     image: './assets/Yves/N1.jpg',
     images: ['./assets/Yves/N1.jpg', './assets/Yves/N2.jpg', './assets/Yves/N3.jpg', './assets/Yves/N4.jpg'],
   },
- 
+
 ];
 
 const categoryFilters = [
@@ -124,14 +124,14 @@ function createGalleryHTML(product) {
       </div>
       <div class="gallery-thumbs">
         ${images
-          .map(
-            (src, idx) => `
+      .map(
+        (src, idx) => `
               <button class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="setGalleryImage(${idx})" aria-label="Image ${idx + 1}">
                 <img src="${src}" alt="${product.name} - ${idx + 1}" onerror="this.style.display='none';" />
               </button>
             `
-          )
-          .join('')}
+      )
+      .join('')}
       </div>
     </div>
   `;
@@ -332,13 +332,13 @@ function hideCheckoutForm() {
 
 async function submitOrder(e) {
   e.preventDefault();
-  
+
   const cart = getCart();
   if (cart.length === 0) {
     showNotification('Votre panier est vide');
     return;
   }
-  
+
   const formData = {
     firstName: document.getElementById('orderFirstName').value,
     lastName: document.getElementById('orderLastName').value,
@@ -356,7 +356,7 @@ async function submitOrder(e) {
   submitBtn.disabled = true;
 
   try {
-    const response = await fetch('https://anber-backend.onrender.com/api/submit-order', {
+    const response = await fetch('https://backendanber.onrender.com/api/submit-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -369,7 +369,7 @@ async function submitOrder(e) {
     if (data.success) {
       localStorage.removeItem('anberCart');
       updateCartBadge();
-      
+
       const cartContainer = document.getElementById('cartContent');
       cartContainer.innerHTML = `
         <div style="text-align:center; padding: 40px 20px; max-width: 600px; margin: 0 auto;">
@@ -575,7 +575,7 @@ function initMobileMenu() {
   const hamburger = document.querySelector('.hamburger');
   const mobileMenuOverlay = document.createElement('div');
   mobileMenuOverlay.className = 'mobile-menu-overlay';
-  
+
   // Create mobile menu content
   mobileMenuOverlay.innerHTML = `
     <nav class="mobile-menu">
@@ -590,9 +590,9 @@ function initMobileMenu() {
       </a>
     </nav>
   `;
-  
+
   document.body.appendChild(mobileMenuOverlay);
-  
+
   if (hamburger) {
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
@@ -600,7 +600,7 @@ function initMobileMenu() {
       document.body.style.overflow = mobileMenuOverlay.classList.contains('active') ? 'hidden' : '';
     });
   }
-  
+
   // Close menu when clicking on overlay
   mobileMenuOverlay.addEventListener('click', (e) => {
     if (e.target === mobileMenuOverlay) {
@@ -609,7 +609,7 @@ function initMobileMenu() {
       document.body.style.overflow = '';
     }
   });
-  
+
   // Close menu when clicking on links
   mobileMenuOverlay.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
@@ -618,7 +618,7 @@ function initMobileMenu() {
       document.body.style.overflow = '';
     });
   });
-  
+
   // Update mobile cart badge
   function updateMobileCartBadge() {
     const mobileBadge = document.getElementById('cartBadgeMobile');
@@ -629,16 +629,16 @@ function initMobileMenu() {
       mobileBadge.style.display = count > 0 ? 'inline-flex' : 'none';
     }
   }
-  
+
   // Update badge initially and when cart changes
   updateMobileCartBadge();
   // Override the original updateCartBadge to also update mobile
   const originalUpdateCartBadge = window.updateCartBadge;
-  window.updateCartBadge = function() {
+  window.updateCartBadge = function () {
     originalUpdateCartBadge();
     updateMobileCartBadge();
   };
-  
+
   // Handle window resize to close mobile menu on desktop
   window.addEventListener('resize', () => {
     if (window.innerWidth > 980) {
