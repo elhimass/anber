@@ -1896,7 +1896,7 @@ footer {
   }
 
   .hamburger {
-    width: 32px;
+    width: 38px;
     height: 32px;
     padding: 8px;
     border-radius: 8px;
@@ -1914,6 +1914,7 @@ footer {
     left: 0;
     right: 0;
     bottom: 0;
+    background: linear-gradient(135deg, rgba(201, 168, 76, 0.1), rgba(201, 168, 76, 0.05));
     opacity: 0;
     transition: opacity 0.3s ease;
   }
