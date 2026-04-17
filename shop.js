@@ -320,18 +320,75 @@ function updateCartBadge() {
   }
 }
 
-function handlePayment(method) {
-  if (method === 'bank') {
-    showNotification('Choisissez le virement bancaire : décrivez votre commande sur la page de contact.');
+function showCheckoutForm() {
+  document.getElementById('paymentMethodsContainer').style.display = 'none';
+  document.getElementById('checkoutFormContainer').style.display = 'block';
+}
+
+function hideCheckoutForm() {
+  document.getElementById('checkoutFormContainer').style.display = 'none';
+  document.getElementById('paymentMethodsContainer').style.display = 'grid';
+}
+
+async function submitOrder(e) {
+  e.preventDefault();
+  
+  const cart = getCart();
+  if (cart.length === 0) {
+    showNotification('Votre panier est vide');
     return;
   }
-  if (method === 'stripe') {
-    showNotification('Stripe est sélectionné. Une intégration côté serveur est nécessaire pour un vrai paiement.');
-    return;
-  }
-  if (method === 'paypal') {
-    showNotification('PayPal est sélectionné. Une intégration PayPal standard peut être ajoutée plus tard.');
-    return;
+  
+  const formData = {
+    firstName: document.getElementById('orderFirstName').value,
+    lastName: document.getElementById('orderLastName').value,
+    email: document.getElementById('orderEmail').value,
+    phone: document.getElementById('orderPhone').value,
+    address: document.getElementById('orderAddress').value,
+    postalCode: document.getElementById('orderPostalCode').value,
+    city: document.getElementById('orderCity').value,
+    message: document.getElementById('orderMessage').value
+  };
+
+  const submitBtn = document.getElementById('submitOrderBtn');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Envoi en cours...';
+  submitBtn.disabled = true;
+
+  try {
+    const response = await fetch('http://localhost:3001/api/submit-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ formData, cartItems: cart })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.removeItem('anberCart');
+      updateCartBadge();
+      
+      const cartContainer = document.getElementById('cartContent');
+      cartContainer.innerHTML = `
+        <div style="text-align:center; padding: 40px 20px; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #b89758; margin-bottom: 20px;">Commande Transmise ✅</h2>
+          <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">${data.message}</p>
+          <a class="btn" href="products.html">Retour à la boutique</a>
+        </div>
+      `;
+      window.scrollTo(0, 0);
+    } else {
+      showNotification(data.error || 'Erreur lors de la validation de la commande');
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }
+  } catch (error) {
+    console.error('Submit order error:', error);
+    showNotification('Erreur de connexion au serveur');
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
   }
 }
 
@@ -386,12 +443,38 @@ function renderCart() {
         <span>Total</span>
         <span>${formatPrice(getCartTotal())}</span>
       </div>
-      <div class="payment-methods" style="margin-top:24px; display:grid; gap:12px;">
-        <button class="btn" onclick="handlePayment('stripe')">Payer avec Stripe</button>
-        <button class="btn" onclick="handlePayment('paypal')">Payer avec PayPal</button>
-        <button class="btn btn-outline" onclick="handlePayment('bank')">Virement bancaire</button>
+      <div class="payment-methods" id="paymentMethodsContainer" style="margin-top:24px; display:grid; gap:12px;">
+        <button class="btn" onclick="showCheckoutForm()">Passer la Commande</button>
       </div>
-      <a class="btn-outline" href="products.html" style="width:100%; text-align:center; margin-top:16px; display:inline-flex; justify-content:center;">Continuer vos achats</a>
+      <div id="checkoutFormContainer" style="display:none; margin-top:24px; padding:20px; background:#fcfbf9; border:1px solid #ebe5d9; border-radius:4px;">
+        <h3 style="margin-bottom:16px; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #b89758;">Vos Coordonnées</h3>
+        <p style="margin-bottom:20px; font-size: 0.9rem; color: #555;">Veuillez remplir ce formulaire. Notre service client vous appellera pour finaliser la commande.</p>
+        <form id="checkoutForm" onsubmit="submitOrder(event)">
+          <div style="display:flex; gap:12px; margin-bottom:12px;">
+            <input type="text" id="orderFirstName" placeholder="Prénom" required style="width:50%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+            <input type="text" id="orderLastName" placeholder="Nom" required style="width:50%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+          </div>
+          <div style="margin-bottom:12px;">
+            <input type="email" id="orderEmail" placeholder="E-mail" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+          </div>
+          <div style="margin-bottom:12px;">
+            <input type="tel" id="orderPhone" placeholder="Téléphone" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+          </div>
+          <div style="margin-bottom:12px;">
+            <input type="text" id="orderAddress" placeholder="Adresse complète (N°, Rue)" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+          </div>
+          <div style="display:flex; gap:12px; margin-bottom:12px;">
+            <input type="text" id="orderPostalCode" placeholder="Code Postal" required style="width:35%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+            <input type="text" id="orderCity" placeholder="Ville" required style="width:65%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
+          </div>
+          <div style="margin-bottom:16px;">
+            <textarea id="orderMessage" placeholder="Instructions supplémentaires (facultatif)" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; font-family: inherit; resize: vertical;"></textarea>
+          </div>
+          <button type="submit" class="btn" id="submitOrderBtn" style="width:100%; padding: 12px; font-size: 1rem;">Valider et Transmettre la Commande</button>
+          <button type="button" class="btn btn-outline" onclick="hideCheckoutForm()" style="width:100%; margin-top:8px; padding: 12px; font-size: 1rem; text-align: center; justify-content: center; display: flex;">Annuler</button>
+        </form>
+      </div>
+      <a class="btn-outline" id="continueShoppingBtn" href="products.html" style="width:100%; text-align:center; margin-top:16px; display:inline-flex; justify-content:center;">Continuer vos achats</a>
     </div>
   `;
 }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anber — Paiement Réussi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="./assets/logo/logo.png">
+</head>
+<body data-page="success">
+  <nav>
+    <div class="page-wrapper nav-inner">
+      <div class="logo">ANBER</div>
+      <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Boutique</a>
+        <a href="about.html">À Propos</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" class="nav-cart">
+          <span>Panier</span>
+          <span id="cartBadge" class="cart-badge"></span>
+        </a>
+      </div>
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="section">
+      <div class="section-header">
+        <p class="hero-eyebrow">Paiement</p>
+        <h2 class="section-title">Merci pour votre achat !</h2>
+        <p class="section-subtitle">Votre commande a été confirmée et sera traitée dans les plus brefs délais.</p>
+      </div>
+
+      <div class="success-content" style="text-align: center; padding: 60px 20px;">
+        <div style="font-size: 4rem; margin-bottom: 24px;">✅</div>
+        <h3 style="margin-bottom: 16px;">Paiement réussi</h3>
+        <p style="color: var(--muted); margin-bottom: 32px;">
+          Vous recevrez un email de confirmation avec les détails de votre commande.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="products.html" class="btn">Continuer mes achats</a>
+          <a href="contact.html" class="btn-outline">Nous contacter</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-wrapper footer">
+    <div class="footer-inner">
+      <p class="footer-text">© 2026 Anber — Maison de parfums</p>
+      <a class="btn-outline" href="products.html">Voir la boutique</a>
+    </div>
+  </footer>
+
+  <script src="shop.js"></script>
+  <script>
+    // Handle PayPal return
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = urlParams.get('paymentId');
+    const payerId = urlParams.get('PayerID');
+
+    if (paymentId && payerId) {
+      // Execute PayPal payment
+      fetch('http://localhost:3001/api/execute-paypal-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ paymentId, payerId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Clear cart on successful payment
+          localStorage.removeItem('anberCart');
+          updateCartBadge();
+        }
+      })
+      .catch(error => {
+        console.error('PayPal execution error:', error);
+      });
+    } else if (urlParams.get('session_id')) {
+      // Stripe success - clear cart
+      localStorage.removeItem('anberCart');
+      updateCartBadge();
+    }
+  </script>
+</body>
+</html>
