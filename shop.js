@@ -12,8 +12,8 @@ const products = [
     prices: { '30ml': 92, '50ml': 145, '100ml': 210 },
     badge: 'Best-seller',
     rating: '4.9/5',
-    image: './assets/Sauvage/N1.jpg', // Ajout du / au début
-    images: ['./assets/Sauvage/N1.jpg', './assets/Sauvage/N2.jpg', './assets/Sauvage/N3.png'],
+    image: 'assets/Sauvage/N1.jpg', // Ajout du / au début
+    images: ['assets/Sauvage/N1.jpg', 'assets/Sauvage/N2.jpg', 'assets/Sauvage/N3.png'],
   },
   {
     id: 2,
@@ -28,8 +28,8 @@ const products = [
     prices: { '30ml': 69, '50ml': 98, '100ml': 130 },
     badge: 'Signature',
     rating: '4.7/5',
-    image: './assets/withyou/N1.jpg',
-    images: ['./assets/withyou/N1.jpg', './assets/withyou/N2.jpg', './assets/withyou/N3.jpg', './assets/withyou/N4.jpg'],
+    image: 'assets/withyou/N1.jpg',
+    images: ['assets/withyou/N1.jpg', 'assets/withyou/N2.jpg', 'assets/withyou/N3.jpg', 'assets/withyou/N4.jpg'],
   },
   {
     id: 3,
@@ -44,8 +44,8 @@ const products = [
     prices: { '50ml': 120, '100ml': 165 },
     badge: 'Édition',
     rating: '4.8/5',
-    image: './assets/bleu/N1.jpg',
-    images: ['./assets/bleu/N4.png', './assets/bleu/N2.jpg', './assets/bleu/N3.JPG', './assets/bleu/N1.jpg'],
+    image: 'assets/bleu/N1.jpg',
+    images: ['assets/bleu/N4.png', 'assets/bleu/N2.jpg', 'assets/bleu/N3.JPG', 'assets/bleu/N1.jpg'],
   },
   {
     id: 4,
@@ -60,8 +60,8 @@ const products = [
     prices: { '50ml': 145, '100ml': 210 },
     badge: 'Prestige',
     rating: '4.9/5',
-    image: './assets/Yves/N1.jpg',
-    images: ['./assets/Yves/N1.jpg', './assets/Yves/N2.jpg', './assets/Yves/N3.jpg', './assets/Yves/N4.jpg'],
+    image: 'assets/Yves/N1.jpg',
+    images: ['assets/Yves/N1.jpg', 'assets/Yves/N2.jpg', 'assets/Yves/N3.jpg', 'assets/Yves/N4.jpg'],
   },
   {
     id: 5,
@@ -76,8 +76,8 @@ const products = [
     prices: { '50ml': 135, '100ml': 198 },
     badge: null,
     rating: '4.7/5',
-    image: './assets/bois-de-santal/bois-de-santal.jpg',
-    images: ['./assets/bois-de-santal/N1.jpg', './assets/bois-de-santal/N2.jpg', './assets/bois-de-santal/N3.jpg'],
+    image: 'assets/bois-de-santal/bois-de-santal.jpg',
+    images: ['assets/bois-de-santal/N1.jpg', 'assets/bois-de-santal/N2.jpg', 'assets/bois-de-santal/N3.jpg'],
   },
   {
     id: 6,
@@ -92,8 +92,8 @@ const products = [
     prices: { '30ml': 78, '50ml': 122, '100ml': 178 },
     badge: null,
     rating: '4.8/5',
-    image: './assets/nuit-de-jasmin/nuit-de-jasmin.jpg',
-    images: ['./assets/nuit-de-jasmin/N1.jpg', './assets/nuit-de-jasmin/N2.jpg', './assets/nuit-de-jasmin/N3.jpg'],
+    image: 'assets/nuit-de-jasmin/nuit-de-jasmin.jpg',
+    images: ['assets/nuit-de-jasmin/N1.jpg', 'assets/nuit-de-jasmin/N2.jpg', 'assets/nuit-de-jasmin/N3.jpg'],
   },
   {
     id: 7,
@@ -108,8 +108,8 @@ const products = [
     prices: { '30ml': 74, '50ml': 115, '75ml': 150 },
     badge: 'Nouveau',
     rating: '4.8/5',
-    image: './assets/rose-satin/rose-satin.jpg',
-    images: ['./assets/rose-satin/N1.jpg', './assets/rose-satin/N2.jpg', './assets/rose-satin/N3.jpg'],
+    image: 'assets/rose-satin/rose-satin.jpg',
+    images: ['assets/rose-satin/N1.jpg', 'assets/rose-satin/N2.jpg', 'assets/rose-satin/N3.jpg'],
   },
 ];
 
@@ -163,7 +163,7 @@ function createGalleryHTML(product) {
     <div class="detail-gallery-container">
       <div class="gallery-main">
         <div class="gallery-viewport">
-          <img id="galleryMainImage" src="${images[0]}" alt="${product.name}" class="gallery-image" />
+          <img id="galleryMainImage" src="${images[0]}" alt="${product.name}" class="gallery-image" onerror="this.style.display='none';" />
         </div>
         <button class="gallery-nav gallery-nav-prev" onclick="prevGalleryImage()">‹</button>
         <button class="gallery-nav gallery-nav-next" onclick="nextGalleryImage()">›</button>
@@ -176,7 +176,7 @@ function createGalleryHTML(product) {
           .map(
             (src, idx) => `
               <button class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="setGalleryImage(${idx})" aria-label="Image ${idx + 1}">
-                <img src="${src}" alt="${product.name} - ${idx + 1}" />
+                <img src="${src}" alt="${product.name} - ${idx + 1}" onerror="this.style.display='none';" />
               </button>
             `
           )
@@ -270,7 +270,8 @@ function renderProducts(filter) {
     .map((product) => `
       <article class="product-card-luxury">
         <div class="product-image-luxury">
-          <img src="${product.image}" alt="${product.name}" loading="lazy">
+          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div class="image-fallback" style="display:none;">Visuel non disponible</div>
         </div>
         <div class="product-info-luxury">
           <h3 class="product-name-luxury">${product.name}</h3>
@@ -388,7 +389,7 @@ function renderCart() {
     .map(
       (item) => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-image" />
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.style.display='none';" />
         <div class="cart-item-info">
           <h3>${item.name}</h3>
           <p class="cart-item-meta">${item.size}</p>
