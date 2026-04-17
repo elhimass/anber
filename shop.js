@@ -320,6 +320,21 @@ function updateCartBadge() {
   }
 }
 
+function handlePayment(method) {
+  if (method === 'bank') {
+    showNotification('Choisissez le virement bancaire : décrivez votre commande sur la page de contact.');
+    return;
+  }
+  if (method === 'stripe') {
+    showNotification('Stripe est sélectionné. Une intégration côté serveur est nécessaire pour un vrai paiement.');
+    return;
+  }
+  if (method === 'paypal') {
+    showNotification('PayPal est sélectionné. Une intégration PayPal standard peut être ajoutée plus tard.');
+    return;
+  }
+}
+
 function renderCart() {
   const cartContainer = document.getElementById('cartContent');
   if (!cartContainer) return;
@@ -371,8 +386,12 @@ function renderCart() {
         <span>Total</span>
         <span>${formatPrice(getCartTotal())}</span>
       </div>
-      <button class="btn" style="width:100%; margin-top:24px;">Procéder au paiement</button>
-      <a class="btn-outline" href="products.html" style="width:100%; text-align:center;">Continuer vos achats</a>
+      <div class="payment-methods" style="margin-top:24px; display:grid; gap:12px;">
+        <button class="btn" onclick="handlePayment('stripe')">Payer avec Stripe</button>
+        <button class="btn" onclick="handlePayment('paypal')">Payer avec PayPal</button>
+        <button class="btn btn-outline" onclick="handlePayment('bank')">Virement bancaire</button>
+      </div>
+      <a class="btn-outline" href="products.html" style="width:100%; text-align:center; margin-top:16px; display:inline-flex; justify-content:center;">Continuer vos achats</a>
     </div>
   `;
 }
