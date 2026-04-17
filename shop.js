@@ -98,17 +98,15 @@ function formatPrice(value) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
 }
 
-function createImageHTML(product, classes = '') {
-  if (!product.image) {
-    return `<div class="product-image ${classes}"><div class="image-fallback" style="display:grid;">Visuel non disponible</div></div>`;
-  }
+function createImageHTML(product) {
   return `
-    <div class="product-image ${classes}">
-      <img src="${product.image}" alt="${product.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid'" />
-     
+    <div class="product-image-container">
+      <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.parentElement.style.display='none';" />
     </div>
   `;
 }
+
+
 
 function createGalleryHTML(product) {
   const images = Array.isArray(product.images) && product.images.length ? product.images : [product.image];
@@ -223,8 +221,7 @@ function renderProducts(filter) {
     .map((product) => `
       <article class="product-card-luxury">
         <div class="product-image-luxury">
-          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <div class="image-fallback" style="display:none;">Visuel non disponible</div>
+          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.closest('article').style.display='none';">
         </div>
         <div class="product-info-luxury">
           <h3 class="product-name-luxury">${product.name}</h3>
@@ -342,7 +339,7 @@ function renderCart() {
     .map(
       (item) => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.style.display='none';" />
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.parentElement.style.display='none';" />
         <div class="cart-item-info">
           <h3>${item.name}</h3>
           <p class="cart-item-meta">${item.size}</p>
