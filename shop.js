@@ -21,6 +21,7 @@ const categoryFilters = [
 
 const pageType = document.body.dataset.page;
 let activeFilter = 'all';
+let currentSort = 'default';
 let selectedSize = null;
 
 function initPage() {
@@ -154,32 +155,62 @@ function setFilter(filter, element) {
   renderProducts(filter);
 }
 
+function sortProducts(sortType) {
+  currentSort = sortType;
+  renderProducts(activeFilter);
+}
+
 function renderProducts(filter) {
   const grid = document.getElementById('productsGrid');
-  const list = filter === 'all' ? products : products.filter((product) => product.category === filter);
+  let list = filter === 'all' ? [...products] : products.filter((product) => product.category === filter);
+  
+  if (currentSort === 'price_asc') {
+    list.sort((a, b) => a.prices[a.sizes[0]] - b.prices[b.sizes[0]]);
+  } else if (currentSort === 'price_desc') {
+    list.sort((a, b) => b.prices[b.sizes[0]] - a.prices[a.sizes[0]]);
+  } else if (currentSort === 'name_asc') {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   if (!grid) return;
   if (list.length === 0) {
     grid.innerHTML = '<div class="product-empty">Aucun parfum trouvé pour cette catégorie.</div>';
     return;
   }
   grid.innerHTML = list
-    .map((product) => `
+    .map((product) => {
+      const firstSize = product.sizes[0];
+      const stock = product.stock ? product.stock[firstSize] : -1;
+      let stockHtml = '';
+      let actionBtn = `<button class="product-btn-outline-luxury" onclick="addToCart(${product.id}, '${firstSize}')">Ajouter au panier</button>`;
+      let imageStyle = '';
+      if (stock === 0) {
+         stockHtml = `<p style="color: #b00; font-weight: bold; font-size: 0.9em; margin-bottom: 8px;">Épuisé</p>`;
+         actionBtn = `<button class="product-btn-outline-luxury" style="background: #ccc; color: #666; border-color: #ccc; cursor: not-allowed;" disabled>Épuisé</button>`;
+         imageStyle = 'opacity: 0.5; filter: grayscale(100%);';
+      } else if (stock > 0 && stock <= 3) {
+         stockHtml = `<p style="color: #d97a00; font-weight: bold; font-size: 0.9em; margin-bottom: 8px;">🔥 Il ne reste que ${stock} exemplaire(s) !</p>`;
+      }
+
+      return `
       <article class="product-card-luxury">
         <div class="product-image-luxury">
-          <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.closest('article').style.display='none';">
+          <img src="${product.image}" alt="${product.name}" loading="lazy" style="${imageStyle}" onerror="this.closest('article').style.display='none';">
         </div>
         <div class="product-info-luxury">
           <h3 class="product-name-luxury">${product.name}</h3>
-          <span class="product-brand-luxury">${product.collection}</span>
+          <span class="product-brand-luxury">${product.collectionName || product.category || ''}</span>
           <p class="product-description-luxury">${product.desc}</p>
-          <div class="product-price-luxury">${formatPrice(product.prices[product.sizes[0]])}</div>
+          <div class="product-price-luxury">${formatPrice(product.prices[firstSize])}</div>
+          ${stockHtml}
           <div class="product-actions-luxury">
             <a href="product.html?id=${product.id}" class="product-btn-luxury">Voir le parfum</a>
-            <button class="product-btn-outline-luxury" onclick="addToCart(${product.id}, '${product.sizes[0]}')">Ajouter au panier</button>
+            ${actionBtn}
           </div>
         </div>
       </article>
-    `)
+      `;
+    })
     .join('');
 
   // Mettre à jour le compteur de produits
@@ -284,30 +315,30 @@ async function submitOrder(e) {
     return;
   }
 
-  const formData = {
-    firstName: document.getElementById('orderFirstName').value,
-    lastName: document.getElementById('orderLastName').value,
-    email: document.getElementById('orderEmail').value,
-    phone: document.getElementById('orderPhone').value,
-    address: document.getElementById('orderAddress').value,
-    postalCode: document.getElementById('orderPostalCode').value,
-    city: document.getElementById('orderCity').value,
-    message: document.getElementById('orderMessage').value
-  };
+    const formData = {
+      firstName: document.getElementById('orderFirstName').value,
+      lastName: document.getElementById('orderLastName').value,
+      email: document.getElementById('orderEmail').value,
+      phone: document.getElementById('orderPhone').value,
+      address: document.getElementById('orderAddress').value,
+      postalCode: document.getElementById('orderPostalCode').value,
+      city: document.getElementById('orderCity').value,
+      message: document.getElementById('orderMessage').value
+    };
 
-  const submitBtn = document.getElementById('submitOrderBtn');
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = 'Envoi en cours...';
-  submitBtn.disabled = true;
+    const submitBtn = document.getElementById('submitOrderBtn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Envoi en cours...';
+    submitBtn.disabled = true;
 
-  try {
-    const response = await fetch('https://backendanber.onrender.com/api/submit-order', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ formData, cartItems: cart })
-    });
+    try {
+      const response = await fetch('https://backendanber.onrender.com/api/submit-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ formData, cartItems: cart, promoCode: activePromoCode })
+      });
 
     const data = await response.json();
 
@@ -378,7 +409,11 @@ function renderCart() {
     <div class="cart-summary">
       <div class="summary-row">
         <span>Sous-total</span>
-        <span>${formatPrice(getCartTotal())}</span>
+        <span id="cartSubtotal">${formatPrice(getCartTotal())}</span>
+      </div>
+      <div class="summary-row" id="promoRow" style="display:none; color: #d97a00; font-weight: bold;">
+        <span>Réduction Promo</span>
+        <span id="cartPromoDiscount">-0 €</span>
       </div>
       <div class="summary-row">
         <span>Livraison</span>
@@ -386,8 +421,14 @@ function renderCart() {
       </div>
       <div class="summary-row total">
         <span>Total</span>
-        <span>${formatPrice(getCartTotal())}</span>
+        <span id="cartTotalFinal">${formatPrice(getCartTotal())}</span>
       </div>
+      
+      <div style="margin-top: 15px; display: flex; gap: 8px;">
+        <input type="text" id="promoCodeInput" placeholder="Code Promo" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; text-transform: uppercase;">
+        <button class="btn" style="padding: 10px 15px;" onclick="applyPromoCode()">Appliquer</button>
+      </div>
+
       <div class="payment-methods" id="paymentMethodsContainer" style="margin-top:24px; display:grid; gap:12px;">
         <button class="btn" onclick="showCheckoutForm()">Passer la Commande</button>
       </div>
@@ -422,6 +463,39 @@ function renderCart() {
       <a class="btn-outline" id="continueShoppingBtn" href="products.html" style="width:100%; text-align:center; margin-top:16px; display:inline-flex; justify-content:center;">Continuer vos achats</a>
     </div>
   `;
+}
+
+let activePromoCode = null;
+let activePromoDiscount = 0;
+
+async function applyPromoCode() {
+  const code = document.getElementById('promoCodeInput').value.trim();
+  if (!code) return;
+  
+  try {
+    const res = await fetch(\`\${API_URL}/promos/validate/\${code}\`);
+    const data = await res.json();
+    if (data.success) {
+      activePromoCode = code.toUpperCase();
+      activePromoDiscount = data.percentage;
+      showNotification(\`Code promo de -\${activePromoDiscount}% appliqué !\`);
+      
+      const subtotal = getCartTotal();
+      const discountAmount = (subtotal * activePromoDiscount) / 100;
+      const finalTotal = subtotal - discountAmount;
+      
+      document.getElementById('promoRow').style.display = 'flex';
+      document.getElementById('cartPromoDiscount').textContent = \`-\${formatPrice(discountAmount)}\`;
+      document.getElementById('cartTotalFinal').textContent = formatPrice(finalTotal);
+      document.getElementById('cartSubtotal').style.textDecoration = 'line-through';
+    } else {
+      activePromoCode = null;
+      activePromoDiscount = 0;
+      showNotification(data.error);
+    }
+  } catch (err) {
+    showNotification('Erreur de validation du code promo');
+  }
 }
 
 function renderProductDetail() {
@@ -470,12 +544,13 @@ function renderProductDetail() {
         <div style="margin: 24px 0;">
           <h3 class="section-title" style="font-size:1.2rem; margin-bottom:12px;">Sélectionner la contenance</h3>
           <div class="sizes-list" id="sizesList"></div>
+          <div id="stockMessageContainer" style="margin-top: 12px;"></div>
         </div>
 
         <div class="detail-footer">
           <p class="detail-price" id="detailPrice">${formatPrice(product.prices[selectedSize])}</p>
           <div class="detail-actions">
-            <button class="detail-action" onclick="addToCart(${product.id}, '${selectedSize}', 1)" style="background: var(--gold); color: #080808;">Ajouter au panier</button>
+            <button class="detail-action" id="addToCartBtn" onclick="addToCart(${product.id}, selectedSize, 1)" style="background: var(--gold); color: #080808;">Ajouter au panier</button>
             <button class="detail-action outline" onclick="location.href='contact.html'">Contactez-nous</button>
           </div>
         </div>
@@ -483,6 +558,9 @@ function renderProductDetail() {
     </div>
   `;
   renderSizes(product);
+  
+  // Initialize stock for the default size
+  selectSize(selectedSize, product.id);
 }
 
 function renderSizes(product) {
@@ -504,7 +582,33 @@ function selectSize(size, productId) {
     if (chip.textContent === size) chip.classList.add('active');
   });
   document.getElementById('detailPrice').textContent = formatPrice(product.prices[size]);
-}
+
+  // Stock management for Add to Cart button
+  const stock = product.stock ? product.stock[size] : -1;
+  const stockContainer = document.getElementById('stockMessageContainer');
+  const btn = document.getElementById('addToCartBtn');
+  if (btn && stockContainer) {
+    if (stock === 0) {
+      stockContainer.innerHTML = `<p style="color: #b00; font-weight: bold; font-size: 0.9em;">Épuisé</p>`;
+      btn.disabled = true;
+      btn.style.background = '#ccc';
+      btn.style.color = '#666';
+      btn.style.cursor = 'not-allowed';
+      btn.textContent = 'Épuisé';
+    } else {
+      btn.disabled = false;
+      btn.style.background = 'var(--gold)';
+      btn.style.color = '#080808';
+      btn.style.cursor = 'pointer';
+      btn.textContent = 'Ajouter au panier';
+      if (stock > 0 && stock <= 3) {
+        stockContainer.innerHTML = `<p style="color: #d97a00; font-weight: bold; font-size: 0.9em;">🔥 Il ne reste que ${stock} exemplaire(s) !</p>`;
+      } else {
+        stockContainer.innerHTML = '';
+      }
+    }
+  }
+} // end selectSize
 
 function initHeroButtons() {
   const heroButton = document.getElementById('shopNowButton');

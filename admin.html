@@ -24,7 +24,8 @@
     <aside class="sidebar">
       <div class="sidebar-logo">Maison Anber</div>
       <nav>
-        <a href="#" class="active">📦 Gestion des Parfums</a>
+        <a href="#" class="active" id="navProducts">📦 Gestion des Parfums</a>
+        <a href="#" id="navPromos">🎟️ Codes Promos</a>
         <a href="index.html" target="_blank">👁️ Voir la Boutique</a>
         <a href="#" id="logoutBtn" style="color: #ff6b6b; margin-top: 50px;">🚪 Déconnexion</a>
       </nav>
@@ -79,12 +80,28 @@
               <input type="text" name="notes" placeholder="Ex: Bergamote, Poivre Rose, Cèdre" required>
             </div>
             <div class="form-group full-width">
-              <label>Tailles et Prix (Laissez vide si la taille n'est pas disponible)</label>
+              <label>Tailles, Prix et Stock (Laissez vide si la taille n'est pas disponible)</label>
               <div style="display: flex; gap: 15px; margin-top: 5px;">
-                <div style="flex: 1;"><label style="font-size: 11px;">30ml</label><input type="number" name="price_30ml" id="price_30ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">50ml</label><input type="number" name="price_50ml" id="price_50ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">75ml</label><input type="number" name="price_75ml" id="price_75ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">100ml</label><input type="number" name="price_100ml" id="price_100ml" placeholder="Prix €"></div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">30ml</label>
+                  <input type="number" name="price_30ml" id="price_30ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_30ml" id="stock_30ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">50ml</label>
+                  <input type="number" name="price_50ml" id="price_50ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_50ml" id="stock_50ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">75ml</label>
+                  <input type="number" name="price_75ml" id="price_75ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_75ml" id="stock_75ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">100ml</label>
+                  <input type="number" name="price_100ml" id="price_100ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_100ml" id="stock_100ml" placeholder="Stock (Qté)">
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -144,12 +161,28 @@
               <input type="text" name="notes" id="edit-notes" required>
             </div>
             <div class="form-group full-width">
-              <label>Tailles et Prix (Laissez vide si la taille n'est pas disponible)</label>
+              <label>Tailles, Prix et Stock (Laissez vide si la taille n'est pas disponible)</label>
               <div style="display: flex; gap: 15px; margin-top: 5px;">
-                <div style="flex: 1;"><label style="font-size: 11px;">30ml</label><input type="number" name="price_30ml" id="edit_price_30ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">50ml</label><input type="number" name="price_50ml" id="edit_price_50ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">75ml</label><input type="number" name="price_75ml" id="edit_price_75ml" placeholder="Prix €"></div>
-                <div style="flex: 1;"><label style="font-size: 11px;">100ml</label><input type="number" name="price_100ml" id="edit_price_100ml" placeholder="Prix €"></div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">30ml</label>
+                  <input type="number" name="price_30ml" id="edit_price_30ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_30ml" id="edit_stock_30ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">50ml</label>
+                  <input type="number" name="price_50ml" id="edit_price_50ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_50ml" id="edit_stock_50ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">75ml</label>
+                  <input type="number" name="price_75ml" id="edit_price_75ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_75ml" id="edit_stock_75ml" placeholder="Stock (Qté)">
+                </div>
+                <div style="flex: 1;">
+                  <label style="font-size: 11px;">100ml</label>
+                  <input type="number" name="price_100ml" id="edit_price_100ml" placeholder="Prix €" style="margin-bottom: 5px;">
+                  <input type="number" name="stock_100ml" id="edit_stock_100ml" placeholder="Stock (Qté)">
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -168,28 +201,49 @@
         </form>
       </section>
 
-      <!-- Liste des produits -->
-      <section class="card list-section">
-        <h2>Produits en ligne (<span id="productCount">0</span>)</h2>
-        <div class="table-responsive">
-          <table class="products-table">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Nom</th>
-                <th>Collection</th>
-                <th>Prix de base</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="productsTableBody">
-              <tr>
-                <td colspan="5" class="text-center">Chargement des produits...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- Tableau des produits -->
+      <section class="card" id="productsTableSection">
+        <h2>Catalogue Actuel</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Nom</th>
+              <th>Catégorie</th>
+              <th>Prix (Contenances)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <!-- Rempli par le script -->
+          </tbody>
+        </table>
       </section>
+
+      <!-- Section Promo -->
+      <section class="card" id="promosSection" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>Codes Promos</h2>
+        </div>
+        <form id="addPromoForm" style="display: flex; gap: 15px; margin-bottom: 30px; align-items: center;">
+          <input type="text" id="promoCodeInput" placeholder="CODE (ex: SOLDES20)" required style="text-transform: uppercase;">
+          <input type="number" id="promoPercentageInput" placeholder="% de Réduction" required min="1" max="100">
+          <button type="submit" class="btn" style="padding: 10px 20px;">Créer le code</button>
+        </form>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Code Promo</th>
+              <th>Réduction</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="promosTableBody">
+            <!-- Rempli par script -->
+          </tbody>
+        </table>
+      </section>
+
     </main>
   </div>
 

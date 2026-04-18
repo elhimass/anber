@@ -59,10 +59,6 @@
         <div class="perfume-stack">
           <img src="./assets/Bleu/N1.jpg" alt="Bleu de Chanel" class="stack-item stack-1">
           <img src="./assets/Sauvage/N1.jpg" alt="Sauvage" class="stack-item stack-2">
-        
-        </div>
-      </div>
-    </section>
 
     <section class="section products-section">
       <div class="section-header">
@@ -73,8 +69,14 @@
 
       <div class="filters-container">
         <div class="filter-tabs" id="categoryFilters"></div>
-        <div class="filter-info">
+        <div class="filter-info" style="display: flex; gap: 15px; align-items: center; justify-content: flex-end; flex-wrap: wrap;">
           <span id="productCount" class="product-count">50 parfums disponibles</span>
+          <select id="sortDropdown" onchange="sortProducts(this.value)" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 0.9em; background: #fff; cursor: pointer;">
+            <option value="default">Recommandés</option>
+            <option value="price_asc">Prix : Croissant</option>
+            <option value="price_desc">Prix : Décroissant</option>
+            <option value="name_asc">De A à Z</option>
+          </select>
         </div>
       </div>
 

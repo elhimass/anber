@@ -129,11 +129,21 @@ async function fetchAdminProducts() {
           document.getElementById('edit_price_50ml').value = '';
           document.getElementById('edit_price_75ml').value = '';
           document.getElementById('edit_price_100ml').value = '';
+          document.getElementById('edit_stock_30ml').value = '';
+          document.getElementById('edit_stock_50ml').value = '';
+          document.getElementById('edit_stock_75ml').value = '';
+          document.getElementById('edit_stock_100ml').value = '';
           
           if (product.prices) {
             for (const [size, price] of Object.entries(product.prices)) {
               const input = document.getElementById(`edit_price_${size}`);
               if (input) input.value = price;
+            }
+          }
+          if (product.stock) {
+            for (const [size, stockVal] of Object.entries(product.stock)) {
+              const input = document.getElementById(`edit_stock_${size}`);
+              if (input) input.value = stockVal;
             }
           }
           
@@ -163,16 +173,21 @@ addProductForm.addEventListener('submit', async (e) => {
     
     const sizes = [];
     const prices = {};
+    const stock = {};
     ['30ml', '50ml', '75ml', '100ml'].forEach(size => {
       const priceVal = formData.get(`price_${size}`);
+      const stockVal = formData.get(`stock_${size}`);
       if (priceVal) {
         sizes.push(size);
         prices[size] = Number(priceVal);
+        stock[size] = stockVal ? Number(stockVal) : -1; // -1 means infinite stock by default
       }
       formData.delete(`price_${size}`);
+      formData.delete(`stock_${size}`);
     });
     formData.append('sizes', sizes.join(','));
     formData.append('prices', JSON.stringify(prices));
+    formData.append('stock', JSON.stringify(stock));
 
     const res = await fetch(`${API_URL}/admin/products`, {
       method: 'POST',
@@ -210,16 +225,21 @@ editProductForm.addEventListener('submit', async (e) => {
 
     const sizes = [];
     const prices = {};
+    const stock = {};
     ['30ml', '50ml', '75ml', '100ml'].forEach(size => {
       const priceVal = formData.get(`price_${size}`);
+      const stockVal = formData.get(`stock_${size}`);
       if (priceVal) {
         sizes.push(size);
         prices[size] = Number(priceVal);
+        stock[size] = stockVal ? Number(stockVal) : -1;
       }
       formData.delete(`price_${size}`);
+      formData.delete(`stock_${size}`);
     });
     formData.append('sizes', sizes.join(','));
     formData.append('prices', JSON.stringify(prices));
+    formData.append('stock', JSON.stringify(stock));
 
     const res = await fetch(`${API_URL}/admin/products/${id}`, {
       method: 'PUT',
@@ -260,5 +280,109 @@ async function deleteProduct(id) {
   }
 }
 
-// Init check
+// Navigation Tabs
+const navProducts = document.getElementById('navProducts');
+const navPromos = document.getElementById('navPromos');
+const addProductSection = document.getElementById('addProductSection');
+const editProductSection = document.getElementById('editProductSection');
+const productsTableSection = document.querySelector('.list-section') || document.getElementById('productsTableSection');
+const promosSection = document.getElementById('promosSection');
+
+navProducts.addEventListener('click', (e) => {
+  e.preventDefault();
+  navProducts.classList.add('active');
+  if(navPromos) navPromos.classList.remove('active');
+  
+  promosSection.style.display = 'none';
+  if(productsTableSection) productsTableSection.style.display = 'block';
+  addProductSection.style.display = 'none';
+  editProductSection.style.display = 'none';
+  fetchAdminProducts();
+});
+
+if(navPromos) {
+  navPromos.addEventListener('click', (e) => {
+    e.preventDefault();
+    navPromos.classList.add('active');
+    navProducts.classList.remove('active');
+    
+    if(productsTableSection) productsTableSection.style.display = 'none';
+    addProductSection.style.display = 'none';
+    editProductSection.style.display = 'none';
+    promosSection.style.display = 'block';
+    
+    fetchPromos();
+  });
+}
+
+// ======================================
+// Promo Methods
+// ======================================
+
+async function fetchPromos() {
+  const tbody = document.getElementById('promosTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="3" class="text-center">Chargement...</td></tr>';
+  
+  try {
+    const res = await fetch(`${API_URL}/admin/promos`);
+    const data = await res.json();
+    
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-center">Aucun code promo trouvé.</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = data.map(promo => `
+      <tr>
+        <td><strong>${promo.code}</strong></td>
+        <td><span style="color: #d97a00; font-weight: bold;">-${promo.discountPercentage}%</span></td>
+        <td>
+          <button class="btn btn-outline" style="border-color: red; color: red;" onclick="deletePromo('${promo._id}')">Supprimer</button>
+        </td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="3" class="text-center" style="color:red;">Erreur.</td></tr>';
+  }
+}
+
+const addPromoForm = document.getElementById('addPromoForm');
+if(addPromoForm) {
+  addPromoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+    const discountPercentage = document.getElementById('promoPercentageInput').value;
+    
+    try {
+      const res = await fetch(`${API_URL}/admin/promos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, discountPercentage })
+      });
+      const data = await res.json();
+      if(data.success) {
+        addPromoForm.reset();
+        fetchPromos();
+      } else {
+        alert(data.error || "Erreur de création");
+      }
+    } catch(err) {
+      alert("Erreur réseau");
+    }
+  });
+}
+
+async function deletePromo(id) {
+  if(!confirm("Supprimer ce code promo ?")) return;
+  try {
+    const res = await fetch(`${API_URL}/admin/promos/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if(data.success) fetchPromos();
+  } catch(err) {
+    alert("Erreur réseau");
+  }
+}
+
+// Initial Load Products
 checkLogin();
