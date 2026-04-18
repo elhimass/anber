@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -143,6 +145,23 @@ const products = [
   },
 ];
 
+function pathExists(filePath) {
+  try {
+    return fs.existsSync(filePath);
+  } catch (err) {
+    console.warn(`Erreur lors de la vérification du fichier : ${filePath}`, err);
+    return false;
+  }
+}
+
+function addAttachmentIfExists(list, attachment) {
+  if (pathExists(attachment.path)) {
+    list.push(attachment);
+  } else {
+    console.warn(`Fichier d'attachement introuvable : ${attachment.path}`);
+  }
+}
+
 // Helper pour générer le PDF
 function createInvoice(formData, cartItemsSelected, productsList, totalAmount) {
   return new Promise((resolve, reject) => {
@@ -165,7 +184,9 @@ function createInvoice(formData, cartItemsSelected, productsList, totalAmount) {
       // En-tête (Logo)
       const logoPath = path.join(__dirname, '..', 'assets', 'logo', 'logo.png');
       try {
-        doc.image(logoPath, 50, 30, { width: 80 });
+        if (fs.existsSync(logoPath)) {
+          doc.image(logoPath, 50, 30, { width: 80 });
+        }
       } catch (e) {
         // Logo introuvable
       }
@@ -311,7 +332,7 @@ app.post('/api/submit-order', async (req, res) => {
     const attachments = [];
 
     // Ajouter le logo
-    attachments.push({
+    addAttachmentIfExists(attachments, {
       filename: 'logo.png',
       path: path.join(__dirname, '..', 'assets', 'logo', 'logo.png'),
       cid: 'logo_anber'
@@ -319,23 +340,33 @@ app.post('/api/submit-order', async (req, res) => {
     
     cartItems.forEach((item, index) => {
       const product = products.find(p => p.id === item.id);
-      if (product) {
-        const itemTotal = product.prices[item.size] * item.quantity;
-        totalAmount += itemTotal;
-        
-        let imageUrl = product.image;
-        if(imageUrl.startsWith('./')) {
-           imageUrl = imageUrl.substring(2);
-        }
+      if (!product) {
+        console.warn(`Produit introuvable pour l'item de panier : ${JSON.stringify(item)}`);
+        return;
+      }
 
-        const cid = `img_${index}`;
-        attachments.push({
-          filename: `product_${index}.jpg`,
-          path: path.join(__dirname, '..', imageUrl),
-          cid: cid
-        });
+      const unitPrice = product.prices[item.size];
+      if (typeof unitPrice !== 'number') {
+        console.warn(`Prix invalide pour le produit ${product.id} avec la taille ${item.size}`);
+        return;
+      }
+
+      const itemTotal = unitPrice * item.quantity;
+      totalAmount += itemTotal;
+      
+      let imageUrl = product.image;
+      if (imageUrl.startsWith('./')) {
+        imageUrl = imageUrl.substring(2);
+      }
+
+      const cid = `img_${index}`;
+      addAttachmentIfExists(attachments, {
+        filename: `product_${index}.jpg`,
+        path: path.join(__dirname, '..', imageUrl),
+        cid: cid
+      });
         
-        itemsHtml += `
+      itemsHtml += `
           <tr>
             <td style="padding: 10px; border-bottom: 1px solid #ddd; width: 100px;">
               <img src="cid:${cid}" alt="${product.name}" style="width: 80px; height: auto; border-radius: 4px; object-fit: cover; border: 1px solid #eee;" />
@@ -349,7 +380,6 @@ app.post('/api/submit-order', async (req, res) => {
             <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;"><strong>${itemTotal} €</strong></td>
           </tr>
         `;
-      }
     });
 
     const mailOptions = {
@@ -425,19 +455,24 @@ app.post('/api/submit-order', async (req, res) => {
       `
     };
 
-    if(process.env.SMTP_HOST && process.env.SMTP_USER && !process.env.SMTP_HOST.includes('smtp.example.com')) {
-      await transporter.sendMail(mailOptions);
-      await transporter.sendMail(customerMailOptions);
-      console.log(`Commande et remerciements envoyés par email pour ${formData.firstName} ${formData.lastName}`);
+    if (process.env.SMTP_HOST && process.env.SMTP_USER && !process.env.SMTP_HOST.includes('smtp.example.com')) {
+      try {
+        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(customerMailOptions);
+        console.log(`Commande et remerciements envoyés par email pour ${formData.firstName} ${formData.lastName}`);
+      } catch (mailError) {
+        console.error('Erreur lors de l’envoi des emails :', mailError);
+        return res.status(500).json({ error: 'Une erreur est survenue lors de l’envoi de votre commande par email. Vérifiez la configuration SMTP.' });
+      }
     } else {
-      console.warn("⚠️ AVERTISSEMENT : Les emails n'ont pas pu être envoyés");
+      console.warn("⚠️ AVERTISSEMENT : Les emails n'ont pas pu être envoyés - SMTP non configuré ou désactivé.");
     }
 
     res.json({ success: true, message: 'Votre commande a bien été enregistrée. Notre service client vous contactera très prochainement au ' + formData.phone + '.' });
 
   } catch (error) {
     console.error('Submit order error:', error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la transmission de votre commande. Veuillez réessayer ou nous appeler directement.' });
+    res.status(500).json({ error: 'Une erreur est survenue lors de la transmission de votre commande. Vérifiez vos emails/logs ou contactez-nous.', details: error.message });
   }
 });
 
