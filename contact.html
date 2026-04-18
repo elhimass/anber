@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anber — Contact</title>
+  <title>Anber â€” Contact</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -21,7 +21,7 @@
       <div class="nav-links">
         <a href="index.html">Accueil</a>
         <a href="products.html">Boutique</a>
-        <a href="about.html">À Propos</a>
+        <a href="about.html">Ã€ Propos</a>
         <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
         <a href="cart.html" class="nav-cart">
@@ -43,7 +43,7 @@
         <p class="hero-eyebrow">Nous Contacter</p>
         <h2 class="section-title">Parlons de Parfums</h2>
         <p class="section-subtitle">Des questions sur nos fragrances ? Besoin de conseils pour trouver votre signature ?
-          Notre équipe est là pour vous aider.</p>
+          Notre Ã©quipe est lÃ  pour vous aider.</p>
       </div>
 
       <div class="contact-grid">
@@ -62,7 +62,7 @@
             <div class="form-group">
               <label for="subject">Sujet</label>
               <select id="subject" name="subject" required>
-                <option value="">Sélectionner un sujet</option>
+                <option value="">SÃ©lectionner un sujet</option>
                 <option value="question">Question sur un parfum</option>
                 <option value="conseil">Demande de conseil</option>
                 <option value="commande">Question sur une commande</option>
@@ -87,7 +87,7 @@
           </div>
 
           <div class="info-card">
-            <h3>Téléphone</h3>
+            <h3>TÃ©lÃ©phone</h3>
             <p><a href="tel:+33123456789">+33 (1) 23 45 67 89</a></p>
           </div>
 
@@ -98,15 +98,15 @@
 
           <div class="info-card">
             <h3>Horaires</h3>
-            <p>Lundi - Vendredi: 10h - 18h<br />Samedi: 11h - 17h<br />Dimanche: Fermé</p>
+            <p>Lundi - Vendredi: 10h - 18h<br />Samedi: 11h - 17h<br />Dimanche: FermÃ©</p>
           </div>
         </div>
       </div>
 
       <div style="margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 60px;">
-        <h3 class="section-title" style="font-size: 2rem; margin-bottom: 24px;">Inscrivez-vous à Notre Infolettre</h3>
-        <p style="color: var(--muted); margin-bottom: 20px;">Recevez nos dernières fragrances, conseils beauté et offres
-          exclusives directement dans votre boîte mail.</p>
+        <h3 class="section-title" style="font-size: 2rem; margin-bottom: 24px;">Inscrivez-vous Ã  Notre Infolettre</h3>
+        <p style="color: var(--muted); margin-bottom: 20px;">Recevez nos derniÃ¨res fragrances, conseils beautÃ© et offres
+          exclusives directement dans votre boÃ®te mail.</p>
         <form class="newsletter-form" id="newsletterForm">
           <input type="email" placeholder="Votre adresse email" required>
           <button type="submit" class="btn">S'inscrire</button>
@@ -115,10 +115,44 @@
     </section>
   </main>
 
-  <footer class="page-wrapper footer">
-    <div class="footer-inner">
-      <p class="footer-text">© 2026 Anber — Maison de parfums</p>
-      <a class="btn-outline" href="index.html">Retour à l'accueil</a>
+    <footer class="page-wrapper footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="./assets/logo/logo.png" alt="Anber" class="footer-logo">
+        <p class="footer-tagline">L'art du parfum réinventé</p>
+        <p class="footer-description">Découvrez une collection exclusive de fragrances d'exception, soigneusement sélectionnées pour révéler votre essence unique.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-section">
+          <h4>Navigation</h4>
+          <a href="products.html">Boutique</a>
+          <a href="about.html">À Propos</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Service Client</h4>
+          <a href="contact.html">Nous contacter</a>
+          <a href="faq.html">Questions fréquentes</a>
+          <a href="contact.html#newsletter">Newsletter</a>
+          <a href="cart.html">Mon panier</a>
+        </div>
+        <div class="footer-section">
+          <h4>Légal</h4>
+          <a href="legal.html#cgv">Conditions générales</a>
+          <a href="legal.html#privacy">Politique de confidentialité</a>
+          <a href="legal.html#mentions">Mentions légales</a>
+          <a href="legal.html#cgv">CGV</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-text">© 2026 Anber — Maison de parfums de luxe. Tous droits réservés.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="Facebook">📘</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+      </div>
     </div>
   </footer>
 
@@ -145,7 +179,7 @@
         });
         const result = await response.json();
         if (result.success) {
-          alert('Merci pour votre message ! Nous vous répondrons très vite.');
+          alert('Merci pour votre message ! Nous vous rÃ©pondrons trÃ¨s vite.');
           this.reset();
         } else {
           alert('Erreur: ' + (result.error || 'Erreur lors de l\'envoi.'));
@@ -174,7 +208,7 @@
         });
         const result = await response.json();
         if (result.success) {
-          alert('Vous êtes bien inscrit(e) à notre infolettre !');
+          alert('Vous Ãªtes bien inscrit(e) Ã  notre infolettre !');
           this.reset();
         } else {
           alert('Erreur: ' + (result.error || 'Erreur lors de l\'inscription.'));
