@@ -473,19 +473,19 @@ async function applyPromoCode() {
   if (!code) return;
   
   try {
-    const res = await fetch(\`\${API_URL}/promos/validate/\${code}\`);
+    const res = await fetch(`${API_URL}/promos/validate/${code}`);
     const data = await res.json();
     if (data.success) {
       activePromoCode = code.toUpperCase();
       activePromoDiscount = data.percentage;
-      showNotification(\`Code promo de -\${activePromoDiscount}% appliqué !\`);
+      showNotification(`Code promo de -${activePromoDiscount}% appliqué !`);
       
       const subtotal = getCartTotal();
       const discountAmount = (subtotal * activePromoDiscount) / 100;
       const finalTotal = subtotal - discountAmount;
       
       document.getElementById('promoRow').style.display = 'flex';
-      document.getElementById('cartPromoDiscount').textContent = \`-\${formatPrice(discountAmount)}\`;
+      document.getElementById('cartPromoDiscount').textContent = `-${formatPrice(discountAmount)}`;
       document.getElementById('cartTotalFinal').textContent = formatPrice(finalTotal);
       document.getElementById('cartSubtotal').style.textDecoration = 'line-through';
     } else {

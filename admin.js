@@ -283,8 +283,7 @@ async function deleteProduct(id) {
 // Navigation Tabs
 const navProducts = document.getElementById('navProducts');
 const navPromos = document.getElementById('navPromos');
-const addProductSection = document.getElementById('addProductSection');
-const editProductSection = document.getElementById('editProductSection');
+// addProductSection and editProductSection already defined at the top
 const productsTableSection = document.querySelector('.list-section') || document.getElementById('productsTableSection');
 const promosSection = document.getElementById('promosSection');
 
