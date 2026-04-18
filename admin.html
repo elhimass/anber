@@ -78,13 +78,14 @@
               <label>Notes olfactives (séparées par une virgule)</label>
               <input type="text" name="notes" placeholder="Ex: Bergamote, Poivre Rose, Cèdre" required>
             </div>
-            <div class="form-group">
-              <label>Tailles disponibles (virgule)</label>
-              <input type="text" name="sizes" placeholder="Ex: 50ml, 100ml" required>
-            </div>
-            <div class="form-group">
-              <label>Prix par taille (Format JSON)</label>
-              <input type="text" name="prices" placeholder='Ex: {"50ml": 100, "100ml": 150}' required>
+            <div class="form-group full-width">
+              <label>Tailles et Prix (Laissez vide si la taille n'est pas disponible)</label>
+              <div style="display: flex; gap: 15px; margin-top: 5px;">
+                <div style="flex: 1;"><label style="font-size: 11px;">30ml</label><input type="number" name="price_30ml" id="price_30ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">50ml</label><input type="number" name="price_50ml" id="price_50ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">75ml</label><input type="number" name="price_75ml" id="price_75ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">100ml</label><input type="number" name="price_100ml" id="price_100ml" placeholder="Prix €"></div>
+              </div>
             </div>
             <div class="form-group">
               <label>Badge (Facultatif)</label>
@@ -98,6 +99,71 @@
           <div class="form-actions">
             <button type="button" id="cancelAddBtn" class="btn-outline">Annuler</button>
             <button type="submit" id="submitProductBtn" class="btn">Créer le produit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Formulaire de modification de produit -->
+      <section id="editProductSection" class="card form-section" style="display: none;">
+        <h2>Modifier un parfum</h2>
+        <form id="editProductForm">
+          <div class="form-grid">
+            <input type="hidden" name="id" id="edit-id">
+            <div class="form-group">
+              <label>Nom du parfum</label>
+              <input type="text" name="name" id="edit-name" required>
+            </div>
+            <div class="form-group">
+              <label>Slug</label>
+              <input type="text" name="slug" id="edit-slug" required>
+            </div>
+            <div class="form-group">
+              <label>Collection</label>
+              <input type="text" name="collectionName" id="edit-collectionName" required>
+            </div>
+            <div class="form-group">
+              <label>Catégorie</label>
+              <select name="category" id="edit-category" required>
+                <option value="orient">Orient</option>
+                <option value="boise">Boisé</option>
+                <option value="exclusif">Exclusif</option>
+                <option value="frais">Frais</option>
+                <option value="floral">Floral</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sous-titre / Type</label>
+              <input type="text" name="sub" id="edit-sub" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Description longue</label>
+              <textarea name="desc" id="edit-desc" rows="3" required></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Notes olfactives (séparées par une virgule)</label>
+              <input type="text" name="notes" id="edit-notes" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Tailles et Prix (Laissez vide si la taille n'est pas disponible)</label>
+              <div style="display: flex; gap: 15px; margin-top: 5px;">
+                <div style="flex: 1;"><label style="font-size: 11px;">30ml</label><input type="number" name="price_30ml" id="edit_price_30ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">50ml</label><input type="number" name="price_50ml" id="edit_price_50ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">75ml</label><input type="number" name="price_75ml" id="edit_price_75ml" placeholder="Prix €"></div>
+                <div style="flex: 1;"><label style="font-size: 11px;">100ml</label><input type="number" name="price_100ml" id="edit_price_100ml" placeholder="Prix €"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Badge (Facultatif)</label>
+              <input type="text" name="badge" id="edit-badge">
+            </div>
+            <div class="form-group full-width">
+              <label>Nouvelle Image Principale (Laisser vide pour conserver l'actuelle)</label>
+              <input type="file" name="image" accept="image/*">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="cancelEditBtn" class="btn-outline">Annuler</button>
+            <button type="submit" id="submitEditProductBtn" class="btn">Enregistrer les modifications</button>
           </div>
         </form>
       </section>
