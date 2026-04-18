@@ -332,7 +332,7 @@ async function submitOrder(e) {
     submitBtn.disabled = true;
 
     try {
-      const response = await fetch('https://backendanber.onrender.com/api/submit-order', {
+      const response = await fetch(`${API_URL}/submit-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
