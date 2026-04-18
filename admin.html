@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anber - Espace Administration</title>
+  <link rel="stylesheet" href="admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Login Overlay -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <h2>Administration Anber</h2>
+      <p>Veuillez entrer le mot de passe pour accéder au back-office.</p>
+      <input type="password" id="adminPassword" placeholder="Mot de passe...">
+      <button id="loginBtn" class="btn">Me Connecter</button>
+      <p id="loginError" class="error-msg" style="display: none;">Mot de passe incorrect</p>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="admin-container" style="display: none;">
+    <aside class="sidebar">
+      <div class="sidebar-logo">Maison Anber</div>
+      <nav>
+        <a href="#" class="active">📦 Gestion des Parfums</a>
+        <a href="index.html" target="_blank">👁️ Voir la Boutique</a>
+        <a href="#" id="logoutBtn" style="color: #ff6b6b; margin-top: 50px;">🚪 Déconnexion</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Tableau de Bord</h1>
+        <button id="showAddFormBtn" class="btn">+ Nouveau Parfum</button>
+      </header>
+
+      <!-- Formulaire d'ajout de produit -->
+      <section id="addProductSection" class="card form-section" style="display: none;">
+        <h2>Ajouter un nouveau parfum</h2>
+        <form id="addProductForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ID Numérique (ex: 5)</label>
+              <input type="number" name="id" required>
+            </div>
+            <div class="form-group">
+              <label>Nom du parfum</label>
+              <input type="text" name="name" placeholder="Ex: Ombre Nomade" required>
+            </div>
+            <div class="form-group">
+              <label>Slug (Nom formaté, ex: ombre-nomade)</label>
+              <input type="text" name="slug" required>
+            </div>
+            <div class="form-group">
+              <label>Collection</label>
+              <input type="text" name="collectionName" placeholder="Ex: Orient" required>
+            </div>
+            <div class="form-group">
+              <label>Catégorie</label>
+              <select name="category" required>
+                <option value="orient">Orient</option>
+                <option value="boise">Boisé</option>
+                <option value="exclusif">Exclusif</option>
+                <option value="frais">Frais</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sous-titre / Type</label>
+              <input type="text" name="sub" placeholder="Ex: Eau de Parfum · Intense" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Description longue</label>
+              <textarea name="desc" rows="3" required></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Notes olfactives (séparées par une virgule)</label>
+              <input type="text" name="notes" placeholder="Ex: Bergamote, Poivre Rose, Cèdre" required>
+            </div>
+            <div class="form-group">
+              <label>Tailles disponibles (virgule)</label>
+              <input type="text" name="sizes" placeholder="Ex: 50ml, 100ml" required>
+            </div>
+            <div class="form-group">
+              <label>Prix par taille (Format JSON)</label>
+              <input type="text" name="prices" placeholder='Ex: {"50ml": 100, "100ml": 150}' required>
+            </div>
+            <div class="form-group">
+              <label>Badge (Facultatif)</label>
+              <input type="text" name="badge" placeholder="Ex: Best-seller, Nouveauté">
+            </div>
+            <div class="form-group full-width">
+              <label>Image Principale (Téléversement Cloudinary)</label>
+              <input type="file" name="image" accept="image/*" required>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="cancelAddBtn" class="btn-outline">Annuler</button>
+            <button type="submit" id="submitProductBtn" class="btn">Créer le produit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Liste des produits -->
+      <section class="card list-section">
+        <h2>Produits en ligne (<span id="productCount">0</span>)</h2>
+        <div class="table-responsive">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Collection</th>
+                <th>Prix de base</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <tr>
+                <td colspan="5" class="text-center">Chargement des produits...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

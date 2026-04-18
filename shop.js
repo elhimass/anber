@@ -1,70 +1,15 @@
-const products = [
-  {
-    id: 1,
-    slug: 'sauvage',
-    name: 'Dior Sauvage',
-    collection: 'Orient',
-    category: 'orient',
-    sub: 'Eau de Parfum · Intense',
-    desc: 'Une signature brute et lumineuse, avec des notes fraîches de bergamote et un cœur ambré boisé qui durent toute la journée.',
-    notes: ['Bergamote', 'Poivre Sichuan', 'Ambroxan', 'Fève Tonka', 'Cèdre'],
-    sizes: ['30ml', '50ml', '100ml'],
-    prices: { '30ml': 92, '50ml': 145, '100ml': 210 },
-    badge: 'Best-seller',
-    rating: '4.9/5',
-    image: 'assets/Sauvage/N1.jpg', // Ajout du / au début
-    images: ['assets/Sauvage/N1.jpg', 'assets/Sauvage/N2.jpg', 'assets/Sauvage/N3.png'],
-  },
-  {
-    id: 2,
-    slug: 'stronger-with-you',
-    name: 'Armani Stronger With You',
-    collection: 'Boisé',
-    category: 'boise',
-    sub: 'Eau de Toilette',
-    desc: 'Un accord chaleureux de vanille et de cardamome autour d’un cœur d’épices et de cacao, pour un parfum sensuel et moderne.',
-    notes: ['Amandes', 'Cardamome', 'Cèdre', 'Vanille', 'Néroli'],
-    sizes: ['30ml', '50ml', '100ml'],
-    prices: { '30ml': 69, '50ml': 98, '100ml': 130 },
-    badge: 'Signature',
-    rating: '4.7/5',
-    image: './assets/withyou/N1.jpg',
-    images: ['./assets/withyou/N1.jpg', './assets/withyou/N2.jpg', './assets/withyou/N3.jpg', './assets/withyou/N4.jpg'],
-  },
-  {
-    id: 3,
-    slug: 'bleu-de-chanel',
-    name: 'Bleu de Chanel',
-    collection: 'Exclusif',
-    category: 'exclusif',
-    sub: 'Eau de Parfum',
-    desc: 'Un parfum riche et élégant, mêlant des accords aromatiques de citron, gingembre et bois pour une présence sophistiquée.',
-    notes: ['Citron', 'Poivre Rose', 'Cèdre', 'Encens', 'Santal'],
-    sizes: ['50ml', '100ml'],
-    prices: { '50ml': 120, '100ml': 165 },
-    badge: 'Édition',
-    rating: '4.8/5',
-    image: './assets/bleu/N1.jpg',
-    images: ['./assets/bleu/N4.png', './assets/bleu/N2.jpg', './assets/bleu/N3.JPG', './assets/bleu/N1.jpg'],
-  },
-  {
-    id: 4,
-    slug: 'yves',
-    name: 'Yves Saint Laurent',
-    collection: 'Prestige',
-    category: 'exclusif',
-    sub: 'Eau de Parfum',
-    desc: 'Une essence de sophistication et de luxe, unissant des accords floraux délicats à une base boisée riche pour une fragrance intemporelle.',
-    notes: ['Vanille', 'Iris', 'Santal', 'Musc', 'Cèdre'],
-    sizes: ['50ml', '100ml'],
-    prices: { '50ml': 145, '100ml': 210 },
-    badge: 'Prestige',
-    rating: '4.9/5',
-    image: './assets/Yves/N1.jpg',
-    images: ['./assets/Yves/N1.jpg', './assets/Yves/N2.jpg', './assets/Yves/N3.jpg', './assets/Yves/N4.jpg'],
-  },
+let products = [];
+const API_URL = 'https://backendanber.onrender.com/api'; // Or use 'http://localhost:3001/api' for local dev
 
-];
+async function fetchProducts() {
+  try {
+    const response = await fetch(`${API_URL}/products`);
+    products = await response.json();
+  } catch (error) {
+    console.error("Erreur de connexion a l'API Backend", error);
+  }
+}
+
 
 const categoryFilters = [
   { id: 'all', label: 'Toutes' },
@@ -649,7 +594,8 @@ function initMobileMenu() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+  await fetchProducts();
   initPage();
   initHeroButtons();
   initMobileMenu();
