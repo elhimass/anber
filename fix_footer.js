@@ -1,46 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anber — Détail produit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="./assets/logo/logo.png">
+const fs = require('fs');
 
-</head>
-<body data-page="product">
-  <nav>
-    <div class="page-wrapper nav-inner">
-      <div class="logo">ANBER</div>
-      <div class="nav-links">
-        <a href="index.html">Accueil</a>
-        <a href="products.html">Boutique</a>
-        <a href="about.html">À Propos</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
-        <a href="cart.html" class="nav-cart">
-          <span>Panier</span>
-          <span id="cartBadge" class="cart-badge"></span>
-        </a>
-      </div>
-      <button class="hamburger" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
-
-  <main class="page-wrapper">
-    <section class="detail-section">
-      <div id="productDetail"></div>
-    </section>
-  </main>
-
-    <footer class="page-wrapper footer">
+const footer = `  <footer class="page-wrapper footer">
     <div class="footer-content">
       <div class="footer-brand">
         <img src="./assets/logo/logo.png" alt="Anber" class="footer-logo">
@@ -79,8 +39,13 @@
         <a href="#" aria-label="Twitter">🐦</a>
       </div>
     </div>
-  </footer>
+  </footer>`;
 
-  <script src="shop.js"></script>
-</body>
-</html>
+const files = ['about.html', 'cart.html', 'contact.html', 'faq.html', 'index.html', 'product.html', 'products.html', 'success.html'];
+
+files.forEach(f => {
+    let content = fs.readFileSync(f, 'utf8');
+    content = content.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/, footer);
+    fs.writeFileSync(f, content, 'utf8');
+    console.log('Fixed ' + f);
+});
