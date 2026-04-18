@@ -75,7 +75,9 @@ async function fetchAdminProducts() {
     const products = await res.json();
     currentProducts = products;
 
-    productCount.textContent = products.length;
+    if (productCount) {
+      productCount.textContent = products.length;
+    }
     tbody.innerHTML = '';
 
     if (products.length === 0) {
