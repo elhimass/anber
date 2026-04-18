@@ -9,7 +9,7 @@ const pwdInput = document.getElementById('adminPassword');
 const loginError = document.getElementById('loginError');
 
 // Simple sécurité front-end (juste pour bloquer la vue, la vraie sécu se ferait côté backend)
-const ADMIN_SECRET = "anber2026"; 
+const ADMIN_SECRET = "anber2026";
 
 function checkLogin() {
   if (localStorage.getItem('anber_admin_auth') === 'true') {
@@ -37,8 +37,7 @@ logoutBtn.addEventListener('click', () => {
   checkLogin();
 });
 
-// Init check
-checkLogin();
+// Init check moved to end of file
 
 // --- UI LOGIC ---
 const showAddFormBtn = document.getElementById('showAddFormBtn');
@@ -63,18 +62,18 @@ async function fetchAdminProducts() {
   try {
     const res = await fetch(`${API_URL}/products`);
     const products = await res.json();
-    
+
     productCount.textContent = products.length;
     tbody.innerHTML = '';
-    
-    if(products.length === 0) {
+
+    if (products.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5" class="text-center">Aucun produit dans la base.</td></tr>';
       return;
     }
 
     products.forEach(p => {
       const displayPrice = p.prices ? p.prices['50ml'] || p.prices['100ml'] || 'N/A' : 'N/A';
-      
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td><img src="${p.image}" class="prod-img" alt="${p.name}"></td>
@@ -91,7 +90,7 @@ async function fetchAdminProducts() {
     // Add Delete Listeners
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
-        if(confirm('Êtes-vous sûr de vouloir supprimer ce parfum définitivement ?')) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce parfum définitivement ?')) {
           const id = e.target.getAttribute('data-id');
           await deleteProduct(id);
         }
@@ -113,14 +112,14 @@ addProductForm.addEventListener('submit', async (e) => {
 
   try {
     const formData = new FormData(addProductForm);
-    
+
     const res = await fetch(`${API_URL}/admin/products`, {
       method: 'POST',
       body: formData // N'utilisez pas Content-Type pour FormData (le navigateur le gère)
     });
 
     const data = await res.json();
-    if(data.success) {
+    if (data.success) {
       alert("Parfum ajouté avec succès sur Cloudinary et MongoDB !");
       addProductForm.reset();
       addProductSection.style.display = 'none';
@@ -128,7 +127,7 @@ addProductForm.addEventListener('submit', async (e) => {
     } else {
       alert("Erreur: " + data.error);
     }
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     alert("Erreur réseau ou serveur.");
   }
@@ -142,12 +141,12 @@ async function deleteProduct(id) {
   try {
     const res = await fetch(`${API_URL}/admin/products/${id}`, { method: 'DELETE' });
     const data = await res.json();
-    if(data.success) {
+    if (data.success) {
       fetchAdminProducts();
     } else {
       alert("Erreur: " + data.error);
     }
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     alert("Erreur réseau");
   }

@@ -36,7 +36,6 @@ const footer = `  <footer class="page-wrapper footer">
       <div class="footer-social">
         <a href="#" aria-label="Instagram">📷</a>
         <a href="#" aria-label="Facebook">📘</a>
-        <a href="#" aria-label="Twitter">🐦</a>
       </div>
     </div>
   </footer>`;
@@ -44,8 +43,8 @@ const footer = `  <footer class="page-wrapper footer">
 const files = ['about.html', 'cart.html', 'contact.html', 'faq.html', 'index.html', 'product.html', 'products.html', 'success.html'];
 
 files.forEach(f => {
-    let content = fs.readFileSync(f, 'utf8');
-    content = content.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/, footer);
-    fs.writeFileSync(f, content, 'utf8');
-    console.log('Fixed ' + f);
+  let content = fs.readFileSync(f, 'utf8');
+  content = content.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/, footer);
+  fs.writeFileSync(f, content, 'utf8');
+  console.log('Fixed ' + f);
 });
