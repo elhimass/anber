@@ -24,11 +24,17 @@
         <a href="about.html">À Propos</a>
         <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
-        <a href="account.html">✨ Mon Compte</a>
-        <a href="cart.html" class="nav-cart">
-          <span>Panier</span>
-          <span id="cartBadge" class="cart-badge"></span>
-        </a>
+        <div class="nav-user-area" id="navUserArea">
+          <a href="account.html" class="nav-login-btn" id="navLoginBtn">🔐 Se connecter</a>
+          <div class="nav-user-dropdown" id="navUserDropdown" style="display:none;">
+            <button class="nav-user-name" id="navUserName" onclick="toggleUserMenu()">Client ▾</button>
+            <div class="nav-dropdown-menu" id="navDropdownMenu">
+              <a href="account.html">👤 Mon Compte</a>
+              <a href="cart.html">🛒 Panier <span id="cartBadgeDropdown" class="cart-badge-sm"></span></a>
+              <button onclick="logoutUser()">🚪 Se déconnecter</button>
+            </div>
+          </div>
+        </div>
       </div>
       <button class="hamburger" aria-label="Menu">
         <span></span>

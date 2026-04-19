@@ -296,9 +296,30 @@ function updateCartBadge() {
   }
 }
 
-function showCheckoutForm() {
+async function showCheckoutForm() {
+  const token = localStorage.getItem('anber_token');
+  if (!token) {
+    showNotification('Veuillez vous connecter pour commander');
+    setTimeout(() => { window.location.href = 'account.html'; }, 1500);
+    return;
+  }
   document.getElementById('paymentMethodsContainer').style.display = 'none';
   document.getElementById('checkoutFormContainer').style.display = 'block';
+  // Auto-fill from account
+  try {
+    const res = await fetch(`${API_URL.replace('/api','')}/api/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (data.success && data.user) {
+      const fn = document.getElementById('orderFirstName');
+      const ln = document.getElementById('orderLastName');
+      const em = document.getElementById('orderEmail');
+      if (fn) { fn.value = data.user.firstName; fn.readOnly = true; fn.style.opacity = '0.7'; }
+      if (ln) { ln.value = data.user.lastName; ln.readOnly = true; ln.style.opacity = '0.7'; }
+      if (em) { em.value = data.user.email; em.readOnly = true; em.style.opacity = '0.7'; }
+    }
+  } catch(e) { console.log('Auto-fill error', e); }
 }
 
 function hideCheckoutForm() {
@@ -308,7 +329,12 @@ function hideCheckoutForm() {
 
 async function submitOrder(e) {
   e.preventDefault();
-
+  const token = localStorage.getItem('anber_token');
+  if (!token) {
+    showNotification('Veuillez vous connecter pour commander');
+    setTimeout(() => { window.location.href = 'account.html'; }, 1500);
+    return;
+  }
   const cart = getCart();
   if (cart.length === 0) {
     showNotification('Votre panier est vide');
@@ -655,7 +681,12 @@ function initMobileMenu() {
 
   // Create mobile menu content
   const isLoggedIn = !!localStorage.getItem('anber_token');
-  const accountLabel = isLoggedIn ? '👤 Mon Compte' : '🔐 Se connecter';
+  const mobileUserHtml = isLoggedIn
+    ? `<a href="account.html">👤 Mon Compte</a>
+       <a href="cart.html">🛒 Panier</a>
+       <a href="#" onclick="localStorage.removeItem('anber_token'); window.location.reload();">🚪 Déconnexion</a>`
+    : `<a href="account.html">🔐 Se connecter</a>
+       <a href="cart.html" class="nav-cart"><span>Panier</span><span id="cartBadgeMobile" class="cart-badge"></span></a>`;
   mobileMenuOverlay.innerHTML = `
     <nav class="mobile-menu">
       <a href="index.html">Accueil</a>
@@ -663,11 +694,7 @@ function initMobileMenu() {
       <a href="about.html">À Propos</a>
       <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
-      <a href="account.html">${accountLabel}</a>
-      <a href="cart.html" class="nav-cart">
-        <span>Panier</span>
-        <span id="cartBadgeMobile" class="cart-badge"></span>
-      </a>
+      ${mobileUserHtml}
     </nav>
   `;
 
@@ -729,15 +756,57 @@ function initMobileMenu() {
   });
 }
 
-// Dynamic nav link: show different text based on auth status
+// Dynamic nav: show user name dropdown or login button
 function updateAccountNavLink() {
-  const isLoggedIn = !!localStorage.getItem('anber_token');
-  // Desktop nav
-  const navLinks = document.querySelectorAll('.nav-links a[href="account.html"]');
-  navLinks.forEach(link => {
-    link.textContent = isLoggedIn ? '👤 Mon Compte' : '🔐 Se connecter';
-  });
+  const token = localStorage.getItem('anber_token');
+  const loginBtn = document.getElementById('navLoginBtn');
+  const dropdownArea = document.getElementById('navUserDropdown');
+  if (!loginBtn || !dropdownArea) return;
+
+  if (token) {
+    loginBtn.style.display = 'none';
+    dropdownArea.style.display = 'block';
+    // Fetch user name
+    fetch(`${API_URL.replace('/api','')}/api/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(r => r.json()).then(data => {
+      if (data.success && data.user) {
+        const nameBtn = document.getElementById('navUserName');
+        if (nameBtn) nameBtn.textContent = `${data.user.firstName} ▾`;
+      }
+    }).catch(() => {});
+  } else {
+    loginBtn.style.display = 'inline';
+    dropdownArea.style.display = 'none';
+  }
+
+  // Update cart badge in dropdown
+  const badgeDrop = document.getElementById('cartBadgeDropdown');
+  if (badgeDrop) {
+    const cart = JSON.parse(localStorage.getItem('anberCart')) || [];
+    const count = cart.reduce((s, i) => s + i.quantity, 0);
+    badgeDrop.textContent = count > 0 ? count : '';
+  }
 }
+
+function toggleUserMenu() {
+  const menu = document.getElementById('navDropdownMenu');
+  if (menu) menu.classList.toggle('show');
+}
+
+function logoutUser() {
+  localStorage.removeItem('anber_token');
+  window.location.reload();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('navDropdownMenu');
+  const btn = document.getElementById('navUserName');
+  if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.remove('show');
+  }
+});
 
 window.addEventListener('DOMContentLoaded', async () => {
   await fetchProducts();
