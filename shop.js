@@ -654,6 +654,8 @@ function initMobileMenu() {
   mobileMenuOverlay.className = 'mobile-menu-overlay';
 
   // Create mobile menu content
+  const isLoggedIn = !!localStorage.getItem('anber_token');
+  const accountLabel = isLoggedIn ? '👤 Mon Compte' : '🔐 Se connecter';
   mobileMenuOverlay.innerHTML = `
     <nav class="mobile-menu">
       <a href="index.html">Accueil</a>
@@ -661,7 +663,7 @@ function initMobileMenu() {
       <a href="about.html">À Propos</a>
       <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
-      <a href="account.html">✨ Mon Compte</a>
+      <a href="account.html">${accountLabel}</a>
       <a href="cart.html" class="nav-cart">
         <span>Panier</span>
         <span id="cartBadgeMobile" class="cart-badge"></span>
@@ -727,10 +729,21 @@ function initMobileMenu() {
   });
 }
 
+// Dynamic nav link: show different text based on auth status
+function updateAccountNavLink() {
+  const isLoggedIn = !!localStorage.getItem('anber_token');
+  // Desktop nav
+  const navLinks = document.querySelectorAll('.nav-links a[href="account.html"]');
+  navLinks.forEach(link => {
+    link.textContent = isLoggedIn ? '👤 Mon Compte' : '🔐 Se connecter';
+  });
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
   await fetchProducts();
   initPage();
   initHeroButtons();
   initMobileMenu();
   updateCartBadge();
+  updateAccountNavLink();
 });

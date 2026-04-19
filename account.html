@@ -3,132 +3,272 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mon Compte VIP — Maison Anber</title>
+  <title>Mon Espace VIP — Maison Anber</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
   <link rel="icon" type="image/png" href="./assets/logo/logo.png">
+  <!-- Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* Styling spécifique pour la page compte (Account Page) */
-    .account-section {
-      padding: 100px 20px;
-      min-height: 80vh;
+    :root {
+      --gold: #c5a059;
+      --bg-dark: #0a0a0a;
+      --surface: #111318;
+      --surface-2: #181b22;
+      --text: #e8e6e3;
+      --text-muted: #888;
+      --border: rgba(197,160,89,0.15);
+    }
+
+    .account-page {
+      padding: 100px 20px 60px;
+      min-height: 90vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      background-color: var(--bg-color); /* Dark gold theme */
+      align-items: flex-start;
     }
-    
-    .account-container {
+
+    /* ===== AUTH CONTAINER ===== */
+    .auth-wrapper {
       width: 100%;
-      max-width: 500px;
-      background: var(--surface-color);
-      padding: 40px;
-      border: 1px solid rgba(197, 160, 89, 0.2);
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: 480px;
+      margin-top: 40px;
     }
 
-    .account-title {
-      font-family: var(--font-primary);
-      color: var(--gold);
-      font-size: 2rem;
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 35px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .auth-logo {
       text-align: center;
-      margin-bottom: 20px;
-      letter-spacing: 0.05em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      letter-spacing: 4px;
+      margin-bottom: 8px;
     }
 
-    .account-subtitle {
+    .auth-subtitle {
       text-align: center;
       color: var(--text-muted);
+      font-size: 0.85rem;
       margin-bottom: 30px;
-      font-size: 0.9rem;
     }
 
-    .form-group {
-      margin-bottom: 20px;
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-color);
-      font-size: 0.9rem;
-    }
-
-    .form-group input {
-      width: 100%;
+    .auth-tab {
+      flex: 1;
+      text-align: center;
       padding: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(197, 160, 89, 0.3);
-      color: var(--text-color);
-      border-radius: 4px;
-      font-family: var(--font-secondary);
-      transition: all 0.3s ease;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
     }
 
-    .form-group input:focus {
+    .auth-tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .field input:focus {
       outline: none;
       border-color: var(--gold);
-      box-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+      box-shadow: 0 0 12px rgba(197,160,89,0.15);
     }
 
-    .form-row {
+    .field-row {
       display: flex;
+      gap: 12px;
+    }
+
+    .field-row .field { flex: 1; }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    .auth-btn:hover {
+      background: #d4af6a;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(197,160,89,0.3);
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .auth-divider span { padding: 0 15px; }
+
+    .google-btn-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .auth-error {
+      color: #ff5555;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 18px;
+    }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
       gap: 15px;
     }
 
-    .form-row .form-group {
-      flex: 1;
+    .dash-greeting {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--text);
     }
 
-    .toggle-form {
+    .dash-greeting span { color: var(--gold); }
+
+    .dash-logout {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-muted);
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .dash-logout:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Tabs */
+    .dash-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 25px;
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .dash-tab {
+      flex: 1;
       text-align: center;
-      margin-top: 20px;
+      padding: 12px;
+      cursor: pointer;
       color: var(--text-muted);
       font-size: 0.9rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+      background: none;
+      border: none;
     }
 
-    .toggle-form span {
-      color: var(--gold);
-      cursor: pointer;
-      text-decoration: underline;
+    .dash-tab.active {
+      background: var(--gold);
+      color: #0a0a0a;
+      font-weight: 600;
     }
 
-    .error-msg {
-      color: #ff4d4d;
-      text-align: center;
-      font-size: 0.9rem;
-      margin-bottom: 15px;
-      min-height: 20px;
-    }
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
 
-    /* VIP Card Styling */
-    .vip-dashboard {
-      display: none; /* hidden by default, shown if logged in */
-      max-width: 800px;
-      width: 100%;
-    }
-
-    .vip-card-wrapper {
-      perspective: 1000px;
-      margin-bottom: 40px;
+    /* === VIP CARD === */
+    .card-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
     }
 
     .vip-card {
       width: 100%;
-      max-width: 450px;
-      height: 260px;
-      margin: 0 auto;
-      background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
-      border: 1px solid rgba(197, 160, 89, 0.4);
-      border-radius: 16px;
+      max-width: 480px;
+      aspect-ratio: 1.586;
+      background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 60%, #1a1510 100%);
+      border: 1px solid rgba(197,160,89,0.35);
+      border-radius: 20px;
       padding: 30px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 40px rgba(197, 160, 89, 0.05);
-      transition: transform 0.5s ease;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -137,122 +277,328 @@
     .vip-card::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0) 60%);
-      transform: rotate(30deg);
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: conic-gradient(from 0deg, transparent, rgba(197,160,89,0.03), transparent, rgba(255,255,255,0.02), transparent);
+      animation: holoRotate 8s linear infinite;
       pointer-events: none;
     }
 
-    .vip-card:hover {
-      transform: scale(1.02) translateY(-5px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 20px rgba(197, 160, 89, 0.2);
+    @keyframes holoRotate {
+      100% { transform: rotate(360deg); }
     }
 
-    .vip-header {
+    .vip-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .card-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-      padding-bottom: 15px;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
     }
 
-    .vip-logo {
-      font-family: var(--font-primary);
-      font-size: 1.5rem;
+    .card-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
       color: var(--gold);
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      letter-spacing: 3px;
     }
 
-    .vip-badge {
-      background: rgba(197, 160, 89, 0.1);
+    .card-level {
+      background: rgba(197,160,89,0.12);
       color: var(--gold);
-      padding: 5px 12px;
+      padding: 5px 14px;
       border-radius: 20px;
-      font-size: 0.8rem;
-      border: 1px solid rgba(197, 160, 89, 0.5);
+      font-size: 0.7rem;
+      border: 1px solid rgba(197,160,89,0.4);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      font-weight: 500;
     }
 
-    .vip-body {
-      margin-top: 20px;
+    .card-middle {
+      position: relative;
+      z-index: 1;
     }
 
-    .vip-name {
-      font-size: 1.4rem;
-      color: var(--text-color);
+    .card-code {
+      font-size: 1.3rem;
+      color: var(--text);
+      letter-spacing: 4px;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 4px;
+    }
+
+    .card-name {
+      font-size: 0.85rem;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-bottom: 5px;
     }
 
-    .vip-points-label {
-      font-size: 0.8rem;
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-points-block {}
+
+    .card-points-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .card-points-value {
+      font-size: 2.2rem;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1;
+      text-shadow: 0 0 15px rgba(197,160,89,0.3);
+    }
+
+    .card-qr {
+      width: 70px;
+      height: 70px;
+      background: #fff;
+      border-radius: 6px;
+      padding: 4px;
+    }
+
+    .card-qr img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Stats below card */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    .vip-points {
-      font-size: 2.5rem;
-      color: var(--gold);
-      font-family: var(--font-primary);
-      line-height: 1;
-      margin-top: 5px;
-      text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+    /* Benefits */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      max-width: 480px;
     }
 
-    .benefits-list {
-      margin-top: 30px;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .benefits-list h3 {
-      color: var(--gold);
-      margin-bottom: 15px;
-      font-family: var(--font-primary);
-    }
-
-    .benefits-list ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .benefits-list li {
-      margin-bottom: 10px;
+    .benefit-item {
       display: flex;
       align-items: center;
-      font-size: 0.95rem;
-      color: var(--text-color);
+      gap: 10px;
+      background: var(--surface);
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text);
     }
 
-    .benefits-list li::before {
-      content: '✓';
+    .benefit-icon {
       color: var(--gold);
-      margin-right: 10px;
-      font-weight: bold;
+      font-size: 1.1rem;
     }
 
-    .logout-btn {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-color);
-      padding: 10px 20px;
-      margin-top: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .logout-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
+    /* === ORDERS === */
+    .orders-empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-muted);
     }
 
+    .order-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 15px;
+      overflow: hidden;
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .order-num {
+      font-family: 'Courier New', monospace;
+      color: var(--gold);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .order-date {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .order-status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .order-status.pending { background: rgba(255,200,0,0.1); color: #ffc800; }
+    .order-status.confirmed { background: rgba(0,200,100,0.1); color: #00c864; }
+    .order-status.shipped { background: rgba(0,150,255,0.1); color: #0096ff; }
+    .order-status.delivered { background: rgba(0,230,100,0.1); color: #00e664; }
+
+    .order-items {
+      padding: 15px 20px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .order-item:last-child { border-bottom: none; }
+
+    .order-item-name { flex: 1; }
+    .order-item-size { color: var(--text-muted); margin: 0 15px; }
+    .order-item-price { color: var(--gold); font-weight: 500; }
+
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: rgba(197,160,89,0.03);
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .order-points { color: var(--gold); }
+    .order-total { color: var(--text); font-weight: 600; }
+
+    /* === PROFILE === */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+    }
+
+    .profile-card h3 {
+      color: var(--gold);
+      margin-bottom: 18px;
+      font-size: 1rem;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 1px;
+    }
+
+    .profile-field {
+      margin-bottom: 14px;
+    }
+
+    .profile-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .profile-value {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .level-progress {
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #e8c97a);
+      border-radius: 10px;
+      transition: width 0.8s ease;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
+      .vip-card { padding: 22px; }
+      .card-code { font-size: 1rem; }
+      .card-points-value { font-size: 1.8rem; }
+      .card-qr { width: 55px; height: 55px; }
+      .dash-tabs { flex-wrap: nowrap; overflow-x: auto; }
+    }
   </style>
 </head>
 <body data-page="account">
@@ -265,7 +611,7 @@
         <a href="about.html">À Propos</a>
         <a href="faq.html">FAQ</a>
         <a href="contact.html">Contact</a>
-        <a href="account.html" class="active">✨ Mon Compte</a>
+        <a href="account.html" id="navAccountLink">✨ Mon Compte</a>
         <a href="cart.html" class="nav-cart">
           <span>Panier</span>
           <span id="cartBadge" class="cart-badge"></span>
@@ -280,95 +626,179 @@
   </nav>
 
   <main class="page-wrapper">
-    <section class="account-section">
-      
-      <!-- CONTENEUR DU FORMULAIRE (Non Connecté) -->
-      <div class="account-container" id="authContainer">
-        <!-- Formulaire de Connexion -->
-        <div id="loginFormSection">
-          <h1 class="account-title">Connexion Privilège</h1>
-          <p class="account-subtitle">Accédez à votre espace exclusif Maison Anber.</p>
-          <div id="loginError" class="error-msg"></div>
-          
-          <form id="loginForm">
-            <div class="form-group">
-              <label>Adresse E-mail</label>
-              <input type="email" id="loginEmail" required />
-            </div>
-            <div class="form-group">
-              <label>Mot de passe</label>
-              <input type="password" id="loginPassword" required />
-            </div>
-            <button type="submit" class="btn" style="width: 100%">Se connecter</button>
-          </form>
-          
-          <div class="toggle-form">
-            Nouveau client ? <span onclick="toggleAuth('register')">Créer un compte</span>
-          </div>
-        </div>
+    <section class="account-page">
 
-        <!-- Formulaire d'Inscription -->
-        <div id="registerFormSection" style="display: none;">
-          <h1 class="account-title">Créer un Compte</h1>
-          <p class="account-subtitle">Rejoignez le cercle privé de la Maison Anber.</p>
-          <div id="registerError" class="error-msg"></div>
-          
-          <form id="registerForm">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Prénom</label>
-                <input type="text" id="regFirstName" required />
-              </div>
-              <div class="form-group">
-                <label>Nom</label>
-                <input type="text" id="regLastName" required />
-              </div>
+      <!-- ===== AUTH (Non connecté) ===== -->
+      <div class="auth-wrapper" id="authContainer">
+        <div class="auth-card">
+          <div class="auth-logo">ANBER</div>
+          <p class="auth-subtitle">Votre espace privilège exclusif</p>
+
+          <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Se connecter</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">Créer un compte</button>
+          </div>
+
+          <!-- Login -->
+          <form id="loginForm" class="auth-form active">
+            <div id="loginError" class="auth-error"></div>
+            <div class="field">
+              <label>E-mail</label>
+              <input type="email" id="loginEmail" placeholder="votre@email.com" required />
             </div>
-            <div class="form-group">
-              <label>Adresse E-mail</label>
-              <input type="email" id="regEmail" required />
-            </div>
-            <div class="form-group">
+            <div class="field">
               <label>Mot de passe</label>
-              <input type="password" id="regPassword" required />
+              <input type="password" id="loginPassword" placeholder="••••••••" required />
             </div>
-            <button type="submit" class="btn" style="width: 100%">Créer mon accès VIP</button>
+            <button type="submit" class="auth-btn">Connexion</button>
           </form>
-          
-          <div class="toggle-form">
-            Déjà client privilégié ? <span onclick="toggleAuth('login')">Se connecter</span>
+
+          <!-- Register -->
+          <form id="registerForm" class="auth-form">
+            <div id="registerError" class="auth-error"></div>
+            <div class="field-row">
+              <div class="field">
+                <label>Prénom</label>
+                <input type="text" id="regFirstName" placeholder="Votre prénom" required />
+              </div>
+              <div class="field">
+                <label>Nom</label>
+                <input type="text" id="regLastName" placeholder="Votre nom" required />
+              </div>
+            </div>
+            <div class="field">
+              <label>E-mail</label>
+              <input type="email" id="regEmail" placeholder="votre@email.com" required />
+            </div>
+            <div class="field">
+              <label>Mot de passe (6 caractères min.)</label>
+              <input type="password" id="regPassword" minlength="6" placeholder="••••••••" required />
+            </div>
+            <button type="submit" class="auth-btn">Créer mon espace VIP</button>
+          </form>
+
+          <div class="auth-divider"><span>ou</span></div>
+
+          <div class="google-btn-wrapper">
+            <div id="googleSignInDiv"></div>
           </div>
         </div>
       </div>
 
-      <!-- CONTENEUR DU DASHBOARD VIP (Connecté) -->
-      <div class="vip-dashboard" id="vipDashboard">
-        <h1 class="account-title" style="margin-bottom: 40px;">Votre Espace Personnel</h1>
-        
-        <div class="vip-card-wrapper">
-          <div class="vip-card">
-            <div class="vip-header">
-              <div class="vip-logo">ANBER</div>
-              <div class="vip-badge" id="vipLevel">Membre Or</div>
+      <!-- ===== DASHBOARD (Connecté) ===== -->
+      <div class="dashboard" id="dashboard">
+        <div class="dash-header">
+          <div class="dash-greeting">Bienvenue, <span id="dashName">Client</span></div>
+          <button class="dash-logout" onclick="logout()">Se déconnecter</button>
+        </div>
+
+        <div class="dash-tabs">
+          <button class="dash-tab active" onclick="switchDashTab('card')">🎴 Ma Carte</button>
+          <button class="dash-tab" onclick="switchDashTab('orders')">📦 Mes Commandes</button>
+          <button class="dash-tab" onclick="switchDashTab('profile')">👤 Mon Profil</button>
+        </div>
+
+        <!-- Panel: Card -->
+        <div class="dash-panel active" id="panel-card">
+          <div class="card-container">
+            <div class="vip-card">
+              <div class="card-top">
+                <div class="card-brand">ANBER</div>
+                <div class="card-level" id="cardLevel">MEMBRE</div>
+              </div>
+              <div class="card-middle">
+                <div class="card-code" id="cardCode">ANB-XXXXXX</div>
+                <div class="card-name" id="cardName">PRÉNOM NOM</div>
+              </div>
+              <div class="card-bottom">
+                <div class="card-points-block">
+                  <div class="card-points-label">Points Fidélité</div>
+                  <div class="card-points-value" id="cardPoints">0</div>
+                </div>
+                <div class="card-qr">
+                  <img id="cardQr" src="" alt="QR Code" />
+                </div>
+              </div>
             </div>
-            <div class="vip-body">
-              <div class="vip-name" id="vipName">Prénom Nom</div>
-              <div class="vip-points-label">Solde de Points</div>
-              <div class="vip-points" id="vipPoints">0</div>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-value" id="statPoints">0</div>
+                <div class="stat-label">Points</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="statOrders">0</div>
+                <div class="stat-label">Commandes</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="statLevel">—</div>
+                <div class="stat-label">Niveau</div>
+              </div>
+            </div>
+
+            <div class="benefits-grid">
+              <div class="benefit-item"><span class="benefit-icon">🎁</span> 10 MAD = 1 Point fidélité</div>
+              <div class="benefit-item"><span class="benefit-icon">🚚</span> Livraison offerte</div>
+              <div class="benefit-item"><span class="benefit-icon">⭐</span> Accès ventes privées</div>
+              <div class="benefit-item"><span class="benefit-icon">💎</span> Service prioritaire</div>
             </div>
           </div>
         </div>
 
-        <div class="benefits-list">
-          <h3>Vos Avantages Exclusifs</h3>
-          <ul id="vipBenefits">
-            <li>Livraison offerte en 24h/48h</li>
-            <li>Accès anticipé aux ventes privées</li>
-            <li>1 Point fidélité gagné pour chaque 100 Dirhams dépensés</li>
-          </ul>
+        <!-- Panel: Orders -->
+        <div class="dash-panel" id="panel-orders">
+          <div id="ordersContainer">
+            <div class="orders-empty">Chargement de vos commandes...</div>
+          </div>
         </div>
-        
-        <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+
+        <!-- Panel: Profile -->
+        <div class="dash-panel" id="panel-profile">
+          <div class="profile-grid">
+            <div class="profile-card">
+              <h3>Informations Personnelles</h3>
+              <div class="profile-field">
+                <div class="profile-label">Prénom</div>
+                <div class="profile-value" id="profFirstName">—</div>
+              </div>
+              <div class="profile-field">
+                <div class="profile-label">Nom</div>
+                <div class="profile-value" id="profLastName">—</div>
+              </div>
+              <div class="profile-field">
+                <div class="profile-label">E-mail</div>
+                <div class="profile-value" id="profEmail">—</div>
+              </div>
+              <div class="profile-field">
+                <div class="profile-label">Code Client</div>
+                <div class="profile-value" id="profCode" style="font-family: 'Courier New', monospace; color: var(--gold);">—</div>
+              </div>
+            </div>
+            <div class="profile-card">
+              <h3>Programme de Fidélité</h3>
+              <div class="profile-field">
+                <div class="profile-label">Statut actuel</div>
+                <div class="profile-value" id="profLevel" style="color: var(--gold);">—</div>
+              </div>
+              <div class="profile-field">
+                <div class="profile-label">Points accumulés</div>
+                <div class="profile-value" id="profPoints">0</div>
+              </div>
+              <div class="profile-field">
+                <div class="profile-label">Membre depuis</div>
+                <div class="profile-value" id="profSince">—</div>
+              </div>
+              <div class="level-progress" id="levelProgressSection">
+                <div class="profile-label">Prochain niveau</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                <div class="progress-text">
+                  <span id="progressCurrent">0 pts</span>
+                  <span id="progressTarget">50 pts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </section>
@@ -379,7 +809,6 @@
       <div class="footer-brand">
         <a href="index.html"><img src="./assets/logo/logo.png" alt="Anber" class="footer-logo"></a>
         <p class="footer-tagline">L'art du parfum réinventé</p>
-        <p class="footer-description">Découvrez une collection exclusive de fragrances d'exception, soigneusement sélectionnées pour révéler votre essence unique.</p>
       </div>
       <div class="footer-links">
         <div class="footer-section">
@@ -392,16 +821,14 @@
         <div class="footer-section">
           <h4>Service Client</h4>
           <a href="contact.html">Nous contacter</a>
-          <a href="faq.html">Questions fréquentes</a>
           <a href="account.html">Mon espace VIP</a>
           <a href="cart.html">Mon panier</a>
         </div>
         <div class="footer-section">
           <h4>Légal</h4>
-          <a href="legal.html#cgv">Conditions générales</a>
-          <a href="legal.html#privacy">Politique de confidentialité</a>
-          <a href="legal.html#mentions">Mentions légales</a>
           <a href="legal.html#cgv">CGV</a>
+          <a href="legal.html#privacy">Confidentialité</a>
+          <a href="legal.html#mentions">Mentions légales</a>
         </div>
       </div>
     </div>

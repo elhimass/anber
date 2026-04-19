@@ -28,6 +28,8 @@
       <nav>
         <a href="#" class="active" id="navProducts">📦 Gestion des Parfums</a>
         <a href="#" id="navPromos">🎟️ Codes Promos</a>
+        <a href="#" id="navOrders">📋 Commandes</a>
+        <a href="#" id="navClients">👥 Clients</a>
         <a href="index.html" target="_blank">👁️ Voir la Boutique</a>
         <a href="#" id="logoutBtn" style="color: #ff6b6b; margin-top: 50px;">🚪 Déconnexion</a>
       </nav>
@@ -287,6 +289,62 @@
             <!-- Rempli par script -->
           </tbody>
         </table>
+      </section>
+
+      <!-- Section Commandes -->
+      <section class="card" id="ordersSection" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>📋 Gestion des Commandes</h2>
+          <div style="display: flex; gap: 10px;">
+            <select id="orderStatusFilter" style="padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px;">
+              <option value="all">Toutes</option>
+              <option value="pending">En attente</option>
+              <option value="confirmed">Confirmées</option>
+              <option value="shipped">Expédiées</option>
+              <option value="delivered">Livrées</option>
+            </select>
+          </div>
+        </div>
+        <div id="ordersListContainer">
+          <p style="color: var(--text-muted); text-align: center; padding: 40px;">Chargement...</p>
+        </div>
+      </section>
+
+      <!-- Section Clients -->
+      <section class="card" id="clientsSection" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>👥 Gestion des Clients</h2>
+          <input type="text" id="clientSearch" placeholder="Rechercher par nom ou email..." style="padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 6px; width: 280px;">
+        </div>
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Code Client</th>
+              <th>Nom Complet</th>
+              <th>Email</th>
+              <th>Points</th>
+              <th>Inscrit le</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clientsTableBody">
+          </tbody>
+        </table>
+        <!-- Détail client -->
+        <div id="clientDetailPanel" style="display: none; margin-top: 25px; padding: 25px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 id="clientDetailName" style="color: var(--gold);">Client</h3>
+            <button onclick="document.getElementById('clientDetailPanel').style.display='none'" class="btn-outline" style="padding: 6px 14px; font-size: 0.8rem;">✕ Fermer</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div><strong style="color: var(--text-muted); font-size: 0.8rem;">EMAIL</strong><br><span id="clientDetailEmail"></span></div>
+            <div><strong style="color: var(--text-muted); font-size: 0.8rem;">CODE CLIENT</strong><br><span id="clientDetailCode" style="color: var(--gold); font-family: monospace;"></span></div>
+            <div><strong style="color: var(--text-muted); font-size: 0.8rem;">POINTS</strong><br><span id="clientDetailPoints"></span></div>
+            <div><strong style="color: var(--text-muted); font-size: 0.8rem;">INSCRIT LE</strong><br><span id="clientDetailDate"></span></div>
+          </div>
+          <h4 style="color: var(--gold); margin-bottom: 10px;">Historique des commandes</h4>
+          <div id="clientOrdersList"></div>
+        </div>
       </section>
 
     </main>
