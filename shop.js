@@ -383,84 +383,106 @@ function renderCart() {
     return;
   }
 
-  const cartItems = cart
+  const cartItemsHtml = cart
     .map(
       (item) => `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.parentElement.style.display='none';" />
-        <div class="cart-item-info">
-          <h3>${item.name}</h3>
-          <p class="cart-item-meta">${item.size}</p>
+        <div class="cart-item-image-wrapper">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.parentElement.style.display='none';" />
         </div>
-        <div class="cart-item-quantity">
-          <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity - 1})">−</button>
-          <input type="number" value="${item.quantity}" onchange="updateCartQuantity(${item.id}, '${item.size}', this.value)" />
-          <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity + 1})">+</button>
+        <div class="cart-item-details">
+          <div class="cart-item-header">
+            <h3>${item.name}</h3>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id}, '${item.size}')">✕</button>
+          </div>
+          <p class="cart-item-meta">Contenance: <strong>${item.size}</strong></p>
+          <div class="cart-item-bottom">
+            <div class="cart-item-quantity">
+              <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity - 1})">−</button>
+              <input type="number" value="${item.quantity}" onchange="updateCartQuantity(${item.id}, '${item.size}', this.value)" min="1" />
+              <button onclick="updateCartQuantity(${item.id}, '${item.size}', ${item.quantity + 1})">+</button>
+            </div>
+            <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+          </div>
         </div>
-        <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
-        <button class="cart-item-remove" onclick="removeFromCart(${item.id}, '${item.size}')">✕</button>
       </div>
     `
     )
     .join('');
 
   cartContainer.innerHTML = `
-    <div class="cart-items">${cartItems}</div>
-    <div class="cart-summary">
-      <div class="summary-row">
-        <span>Sous-total</span>
-        <span id="cartSubtotal">${formatPrice(getCartTotal())}</span>
-      </div>
-      <div class="summary-row" id="promoRow" style="display:none; color: #d97a00; font-weight: bold;">
-        <span>Réduction Promo</span>
-        <span id="cartPromoDiscount">-0 €</span>
-      </div>
-      <div class="summary-row">
-        <span>Livraison</span>
-        <span>À calculer</span>
-      </div>
-      <div class="summary-row total">
-        <span>Total</span>
-        <span id="cartTotalFinal">${formatPrice(getCartTotal())}</span>
+    <div class="cart-layout">
+      <!-- Zone des articles -->
+      <div class="cart-items-section">
+        <h3 class="cart-section-title">Vos Articles</h3>
+        <div class="cart-items-list">${cartItemsHtml}</div>
       </div>
       
-      <div style="margin-top: 15px; display: flex; gap: 8px;">
-        <input type="text" id="promoCodeInput" placeholder="Code Promo" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; text-transform: uppercase;">
-        <button class="btn" style="padding: 10px 15px;" onclick="applyPromoCode()">Appliquer</button>
-      </div>
+      <!-- Zone de résumé et paiement -->
+      <div class="cart-sidebar">
+        <div class="cart-summary-card glass-panel">
+          <h3 class="cart-section-title">Résumé de la commande</h3>
+          <div class="summary-details">
+            <div class="summary-row">
+              <span>Sous-total HT</span>
+              <span id="cartSubtotal">${formatPrice(getCartTotal())}</span>
+            </div>
+            <div class="summary-row" id="promoRow" style="display:none; color: var(--gold); font-weight: 500;">
+              <span>Code Avantage</span>
+              <span id="cartPromoDiscount">-0 €</span>
+            </div>
+            <div class="summary-row">
+              <span>Frais de livraison</span>
+              <span style="font-size: 0.8em; color: var(--gold);">Offerts par la Maison</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total">
+              <span>Total TTC</span>
+              <span id="cartTotalFinal">${formatPrice(getCartTotal())}</span>
+            </div>
+          </div>
 
-      <div class="payment-methods" id="paymentMethodsContainer" style="margin-top:24px; display:grid; gap:12px;">
-        <button class="btn" onclick="showCheckoutForm()">Passer la Commande</button>
+          <div class="promo-code-container">
+             <input type="text" id="promoCodeInput" class="custom-input" placeholder="Avez-vous un code privilège ?" style="text-transform: uppercase;">
+             <button class="btn-outline-gold" onclick="applyPromoCode()">Appliquer</button>
+          </div>
+
+          <div id="paymentMethodsContainer" class="payment-action-container">
+            <button class="btn btn-full-width checkout-submit-btn" onclick="document.getElementById('checkoutFormContainer').style.display='block'; document.getElementById('paymentMethodsContainer').style.display='none';">Procéder au paiement securely</button>
+            <a class="btn-outline-gold" href="products.html" style="width:100%; text-align:center; display:inline-flex; align-items:center; justify-content:center; margin-top:12px; height:50px;">Retour à la collection</a>
+          </div>
+        </div>
+
+        <!-- Formulaire de Coordonnées -->
+        <div id="checkoutFormContainer" class="checkout-form-card glass-panel" style="display:none; margin-top: 20px;">
+          <h3 class="cart-section-title">Finaliser votre commande</h3>
+          <p class="checkout-subtitle">Renseignez vos coordonnées. Nos artisans préparateurs s'occuperont de votre colis avec la plus grande délicatesse.</p>
+          <form id="checkoutForm" onsubmit="submitOrder(event)" class="custom-form">
+            <div class="form-row">
+              <input type="text" id="orderFirstName" class="custom-input" placeholder="Prénom" required>
+              <input type="text" id="orderLastName" class="custom-input" placeholder="Nom" required>
+            </div>
+            <div class="form-group">
+              <input type="email" id="orderEmail" class="custom-input" placeholder="Adresse électronique" required>
+            </div>
+            <div class="form-group">
+              <input type="tel" id="orderPhone" class="custom-input" placeholder="Numéro de téléphone" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="orderAddress" class="custom-input" placeholder="Adresse complète de livraison" required>
+            </div>
+            <div class="form-row">
+              <input type="text" id="orderPostalCode" class="custom-input" placeholder="Code Postal" required>
+              <input type="text" id="orderCity" class="custom-input" placeholder="Ville" required>
+            </div>
+            <div class="form-group">
+              <textarea id="orderMessage" class="custom-input textarea-input" rows="3" placeholder="Informations complémentaires, instruction pour le livreur ou mot doux à joindre au paquet."></textarea>
+            </div>
+            <button type="submit" id="submitOrderBtn" class="btn btn-full-width checkout-submit-btn">Terminer mes achats et valider</button>
+            <button type="button" class="btn-outline-gold" style="width:100%; justify-content:center; margin-top:12px; display:inline-flex; border-color: #666; color: #666; height:50px;" onclick="document.getElementById('checkoutFormContainer').style.display='none'; document.getElementById('paymentMethodsContainer').style.display='flex';">Annuler la saisie</button>
+          </form>
+        </div>
       </div>
-      <div id="checkoutFormContainer" style="display:none; margin-top:24px; padding:20px; background:#fcfbf9; border:1px solid #ebe5d9; border-radius:4px;">
-        <h3 style="margin-bottom:16px; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #b89758;">Vos Coordonnées</h3>
-        <p style="margin-bottom:20px; font-size: 0.9rem; color: #555;">Veuillez remplir ce formulaire. Notre service client vous appellera pour finaliser la commande.</p>
-        <form id="checkoutForm" onsubmit="submitOrder(event)">
-          <div style="display:flex; gap:12px; margin-bottom:12px;">
-            <input type="text" id="orderFirstName" placeholder="Prénom" required style="width:50%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-            <input type="text" id="orderLastName" placeholder="Nom" required style="width:50%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:12px;">
-            <input type="email" id="orderEmail" placeholder="E-mail" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:12px;">
-            <input type="tel" id="orderPhone" placeholder="Téléphone" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:12px;">
-            <input type="text" id="orderAddress" placeholder="Adresse complète (N°, Rue)" required style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-          </div>
-          <div style="display:flex; gap:12px; margin-bottom:12px;">
-            <input type="text" id="orderPostalCode" placeholder="Code Postal" required style="width:35%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-            <input type="text" id="orderCity" placeholder="Ville" required style="width:65%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box;">
-          </div>
-          <div style="margin-bottom:16px;">
-            <textarea id="orderMessage" placeholder="Instructions supplémentaires (facultatif)" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; font-family: inherit; resize: vertical;"></textarea>
-          </div>
-          <button type="submit" class="btn" id="submitOrderBtn" style="width:100%; padding: 12px; font-size: 1rem;">Valider et Transmettre la Commande</button>
-          <button type="button" class="btn btn-outline" onclick="hideCheckoutForm()" style="width:100%; margin-top:8px; padding: 12px; font-size: 1rem; text-align: center; justify-content: center; display: flex;">Annuler</button>
-        </form>
-      </div>
-      <a class="btn-outline" id="continueShoppingBtn" href="products.html" style="width:100%; text-align:center; margin-top:16px; display:inline-flex; justify-content:center;">Continuer vos achats</a>
     </div>
   `;
 }
