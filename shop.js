@@ -301,6 +301,8 @@ function updateCartBadge() {
   }
 }
 
+let cachedUser = null;
+
 async function showCheckoutForm() {
   const token = localStorage.getItem('anber_token');
   if (!token) {
@@ -308,23 +310,69 @@ async function showCheckoutForm() {
     setTimeout(() => { window.location.href = 'account.html'; }, 1500);
     return;
   }
-  document.getElementById('paymentMethodsContainer').style.display = 'none';
-  document.getElementById('checkoutFormContainer').style.display = 'block';
-  // Auto-fill from account
   try {
     const res = await fetch(`${API_URL.replace('/api','')}/api/auth/me`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await res.json();
-    if (data.success && data.user) {
-      const fn = document.getElementById('orderFirstName');
-      const ln = document.getElementById('orderLastName');
-      const em = document.getElementById('orderEmail');
-      if (fn) { fn.value = data.user.firstName; fn.readOnly = true; fn.style.opacity = '0.7'; }
-      if (ln) { ln.value = data.user.lastName; ln.readOnly = true; ln.style.opacity = '0.7'; }
-      if (em) { em.value = data.user.email; em.readOnly = true; em.style.opacity = '0.7'; }
-    }
-  } catch(e) { console.log('Auto-fill error', e); }
+    if (data.success && data.user) cachedUser = data.user;
+  } catch(e) {}
+
+  document.getElementById('paymentMethodsContainer').style.display = 'none';
+  const container = document.getElementById('checkoutFormContainer');
+  container.style.display = 'block';
+
+  if (cachedUser && cachedUser.address && cachedUser.city && cachedUser.phone) {
+    container.innerHTML = `
+      <div style="text-align:center; padding:30px; max-width:500px; margin:0 auto;">
+        <h3 style="color:var(--gold); margin-bottom:20px; font-family:'Cormorant Garamond',serif; font-size:1.8rem;">Confirmer votre commande</h3>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:24px; text-align:left; margin-bottom:24px;">
+          <p style="margin:0 0 6px;color:var(--muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1rem;">Livraison a</p>
+          <p style="margin:0 0 4px;font-size:1.05rem;"><strong>${cachedUser.firstName} ${cachedUser.lastName}</strong></p>
+          <p style="margin:0 0 4px;color:var(--muted);">${cachedUser.address}</p>
+          <p style="margin:0 0 4px;color:var(--muted);">${cachedUser.postalCode} ${cachedUser.city}</p>
+          <p style="margin:0;color:var(--muted);">Tel: ${cachedUser.phone}</p>
+        </div>
+        <div style="display:flex; gap:12px; justify-content:center;">
+          <button class="btn-outline" onclick="showAddressEdit()" style="padding:12px 24px; border-radius:999px;">Modifier</button>
+          <button class="btn" id="confirmOrderBtn" onclick="confirmOrder()" style="padding:12px 30px;">Confirmer & Envoyer</button>
+        </div>
+        <button onclick="hideCheckoutForm()" style="margin-top:16px; color:var(--muted); font-size:0.85rem; background:none; border:none; cursor:pointer;">Annuler</button>
+      </div>`;
+  } else {
+    showAddressFormInContainer(container);
+  }
+}
+
+function showAddressEdit() {
+  showAddressFormInContainer(document.getElementById('checkoutFormContainer'));
+}
+
+function showAddressFormInContainer(container) {
+  const u = cachedUser || {};
+  container.innerHTML = `
+    <form id="addressForm" style="max-width:500px; margin:0 auto; padding:20px;">
+      <h3 style="color:var(--gold); margin-bottom:20px; font-family:'Cormorant Garamond',serif; font-size:1.6rem; text-align:center;">Adresse de livraison</h3>
+      <div style="display:grid; gap:14px;">
+        <div><label style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Telephone *</label><input type="tel" id="orderPhone" value="${u.phone||''}" required style="width:100%; padding:12px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text); border-radius:8px; margin-top:6px;"></div>
+        <div><label style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Adresse *</label><input type="text" id="orderAddress" value="${u.address||''}" required style="width:100%; padding:12px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text); border-radius:8px; margin-top:6px;"></div>
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:14px;">
+          <div><label style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Code postal</label><input type="text" id="orderPostalCode" value="${u.postalCode||''}" style="width:100%; padding:12px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text); border-radius:8px; margin-top:6px;"></div>
+          <div><label style="font-size:0.8rem; color:var(--muted); text-transform:uppercase;">Ville *</label><input type="text" id="orderCity" value="${u.city||''}" required style="width:100%; padding:12px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text); border-radius:8px; margin-top:6px;"></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; margin-top:24px;">
+        <button type="button" class="btn-outline" onclick="hideCheckoutForm()" style="padding:12px 24px; border-radius:999px;">Annuler</button>
+        <button type="submit" class="btn" style="padding:12px 30px;">Enregistrer & Commander</button>
+      </div>
+    </form>`;
+  document.getElementById('addressForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('anber_token');
+    const addr = { phone: document.getElementById('orderPhone').value, address: document.getElementById('orderAddress').value, postalCode: document.getElementById('orderPostalCode').value, city: document.getElementById('orderCity').value };
+    try { await fetch(`${API_URL.replace('/api','')}/api/auth/address`, { method:'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body:JSON.stringify(addr) }); if(cachedUser) Object.assign(cachedUser, addr); } catch(e){}
+    await doSubmitOrder(token);
+  });
 }
 
 function hideCheckoutForm() {
@@ -332,82 +380,74 @@ function hideCheckoutForm() {
   document.getElementById('paymentMethodsContainer').style.display = 'grid';
 }
 
+async function confirmOrder() {
+  const token = localStorage.getItem('anber_token');
+  const btn = document.getElementById('confirmOrderBtn');
+  if (btn) { btn.textContent = 'Envoi...'; btn.disabled = true; }
+  await doSubmitOrder(token);
+}
+
 async function submitOrder(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const token = localStorage.getItem('anber_token');
   if (!token) {
-    showNotification('Veuillez vous connecter pour commander');
+    showNotification('Veuillez vous connecter');
     setTimeout(() => { window.location.href = 'account.html'; }, 1500);
     return;
   }
+  await doSubmitOrder(token);
+}
+
+async function doSubmitOrder(token) {
   const cart = getCart();
-  if (cart.length === 0) {
-    showNotification('Votre panier est vide');
-    return;
-  }
+  if (cart.length === 0) { showNotification('Votre panier est vide'); return; }
 
-    const formData = {
-      firstName: document.getElementById('orderFirstName').value,
-      lastName: document.getElementById('orderLastName').value,
-      email: document.getElementById('orderEmail').value,
-      phone: document.getElementById('orderPhone').value,
-      address: document.getElementById('orderAddress').value,
-      postalCode: document.getElementById('orderPostalCode').value,
-      city: document.getElementById('orderCity').value,
-      message: document.getElementById('orderMessage').value
-    };
+  const u = cachedUser || {};
+  const formData = {
+    firstName: u.firstName || '', lastName: u.lastName || '', email: u.email || '',
+    phone: u.phone || '', address: u.address || '', postalCode: u.postalCode || '',
+    city: u.city || '', message: ''
+  };
 
-    const submitBtn = document.getElementById('submitOrderBtn');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Envoi en cours...';
-    submitBtn.disabled = true;
-
-    try {
-      const token = localStorage.getItem('anber_token');
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${API_URL}/submit-order`, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({ formData, cartItems: cart, promoCode: activePromoCode })
-      });
-
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const response = await fetch(`${API_URL}/submit-order`, {
+      method: 'POST', headers, body: JSON.stringify({ formData, cartItems: cart, promoCode: activePromoCode })
+    });
     const data = await response.json();
-
     if (data.success) {
       localStorage.removeItem('anberCart');
       updateCartBadge();
-
       const cartContainer = document.getElementById('cartContent');
       cartContainer.innerHTML = `
         <div style="text-align:center; padding: 40px 20px; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #b89758; margin-bottom: 20px;">Commande Transmise ✅</h2>
           <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px;">${data.message}</p>
           <a class="btn" href="products.html">Retour à la boutique</a>
-        </div>
-      `;
+        </div>`;
       window.scrollTo(0, 0);
     } else {
-      showNotification(data.error || 'Erreur lors de la validation de la commande');
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
+      showNotification(data.error || 'Erreur lors de la validation');
     }
   } catch (error) {
-    console.error('Submit order error:', error);
     showNotification('Erreur de connexion au serveur');
-    submitBtn.textContent = originalText;
-    submitBtn.disabled = false;
   }
 }
 
 function renderCart() {
   const cartContainer = document.getElementById('cartContent');
   if (!cartContainer) return;
+
+  // Block cart if not logged in
+  if (!localStorage.getItem('anber_token')) {
+    cartContainer.innerHTML = `
+      <div class="cart-empty" style="text-align:center; padding:60px 20px;">
+        <p style="font-size:1.2rem; margin-bottom:20px;">Connectez-vous pour acceder a votre panier</p>
+        <a class="btn" href="account.html">Se connecter</a>
+      </div>`;
+    return;
+  }
 
   const cart = getCart();
   if (cart.length === 0) {
