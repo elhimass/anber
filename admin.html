@@ -195,6 +195,14 @@
               <label>Badge (Facultatif)</label>
               <input type="text" name="badge" id="edit-badge">
             </div>
+            <div class="form-group full-width" style="margin-bottom: 20px;">
+              <label>Galerie Actuelle (Cliquez sur la croix pour supprimer)</label>
+              <div id="edit-gallery-preview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                <!-- Les miniatures seront injectées ici par JS -->
+              </div>
+              <!-- Input caché pour stocker les images restantes sous forme de JSON string -->
+              <input type="hidden" name="remainingImages" id="edit-remaining-images">
+            </div>
             <div class="form-group full-width">
               <label>Nouvelle Image Principale (Laisser vide pour conserver l'actuelle)</label>
               <input type="file" name="image" accept="image/*">

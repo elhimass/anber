@@ -151,6 +151,80 @@ async function fetchAdminProducts() {
           
           document.getElementById('edit-badge').value = product.badge || '';
           
+          // Logique de galerie existante
+          const galleryPreview = document.getElementById('edit-gallery-preview');
+          const remainingImagesInput = document.getElementById('edit-remaining-images');
+          galleryPreview.innerHTML = ''; // reset
+          
+          // On copie le tableau pour pouvoir le manipuler
+          let currentImages = product.images ? [...product.images] : [];
+          if (currentImages.length === 0 && product.image) currentImages.push(product.image);
+
+          // Initialisation de l'input caché
+          remainingImagesInput.value = JSON.stringify(currentImages);
+
+          const renderGallery = () => {
+             galleryPreview.innerHTML = '';
+             remainingImagesInput.value = JSON.stringify(currentImages);
+             
+             if(currentImages.length === 0) {
+                 galleryPreview.innerHTML = '<p style="color:#666; font-size:12px;">Aucun média (La galerie est vide).</p>';
+                 return;
+             }
+
+             currentImages.forEach((imgUrl, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.width = '80px';
+                wrapper.style.height = '80px';
+                wrapper.style.border = '1px solid #ddd';
+                wrapper.style.borderRadius = '4px';
+                wrapper.style.overflow = 'hidden';
+
+                let mediaEl;
+                if(imgUrl.match(/\.(mp4|webm|ogg)$/i) || imgUrl.includes('video/upload')) {
+                   mediaEl = document.createElement('video');
+                   mediaEl.src = imgUrl;
+                   mediaEl.muted = true;
+                } else {
+                   mediaEl = document.createElement('img');
+                   mediaEl.src = imgUrl;
+                }
+                mediaEl.style.width = '100%';
+                mediaEl.style.height = '100%';
+                mediaEl.style.objectFit = 'cover';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '×';
+                deleteBtn.style.position = 'absolute';
+                deleteBtn.style.top = '2px';
+                deleteBtn.style.right = '2px';
+                deleteBtn.style.background = 'red';
+                deleteBtn.style.color = 'white';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.borderRadius = '50%';
+                deleteBtn.style.width = '20px';
+                deleteBtn.style.height = '20px';
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.style.fontSize = '14px';
+                deleteBtn.style.lineHeight = '14px';
+                deleteBtn.style.padding = '0';
+                deleteBtn.title = 'Supprimer ce média';
+
+                deleteBtn.onclick = (e) => {
+                   e.preventDefault();
+                   currentImages.splice(index, 1);
+                   renderGallery();
+                };
+
+                wrapper.appendChild(mediaEl);
+                wrapper.appendChild(deleteBtn);
+                galleryPreview.appendChild(wrapper);
+             });
+          };
+
+          renderGallery();
+          
           editProductSection.style.display = 'block';
           window.scrollTo(0, 0);
         }
