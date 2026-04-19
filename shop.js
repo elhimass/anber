@@ -530,35 +530,8 @@ function renderCart() {
           </div>
         </div>
 
-        <!-- Formulaire de Coordonnées -->
-        <div id="checkoutFormContainer" class="checkout-form-card glass-panel" style="display:none; margin-top: 20px;">
-          <h3 class="cart-section-title">Finaliser votre commande</h3>
-          <p class="checkout-subtitle">Renseignez vos coordonnées. Nos artisans préparateurs s'occuperont de votre colis avec la plus grande délicatesse.</p>
-          <form id="checkoutForm" onsubmit="submitOrder(event)" class="custom-form">
-            <div class="form-row">
-              <input type="text" id="orderFirstName" class="custom-input" placeholder="Prénom" required>
-              <input type="text" id="orderLastName" class="custom-input" placeholder="Nom" required>
-            </div>
-            <div class="form-group">
-              <input type="email" id="orderEmail" class="custom-input" placeholder="Adresse électronique" required>
-            </div>
-            <div class="form-group">
-              <input type="tel" id="orderPhone" class="custom-input" placeholder="Numéro de téléphone" required>
-            </div>
-            <div class="form-group">
-              <input type="text" id="orderAddress" class="custom-input" placeholder="Adresse complète de livraison" required>
-            </div>
-            <div class="form-row">
-              <input type="text" id="orderPostalCode" class="custom-input" placeholder="Code Postal" required>
-              <input type="text" id="orderCity" class="custom-input" placeholder="Ville" required>
-            </div>
-            <div class="form-group">
-              <textarea id="orderMessage" class="custom-input textarea-input" rows="3" placeholder="Informations complémentaires, instruction pour le livreur ou mot doux à joindre au paquet."></textarea>
-            </div>
-            <button type="submit" id="submitOrderBtn" class="btn btn-full-width checkout-submit-btn">Terminer mes achats et valider</button>
-            <button type="button" class="btn-outline-gold" style="width:100%; justify-content:center; margin-top:12px; display:inline-flex; border-color: #666; color: #666; height:50px;" onclick="document.getElementById('checkoutFormContainer').style.display='none'; document.getElementById('paymentMethodsContainer').style.display='flex';">Annuler la saisie</button>
-          </form>
-        </div>
+        <!-- Formulaire dynamique -->
+        <div id="checkoutFormContainer" style="display:none; margin-top: 20px;"></div>
       </div>
     </div>
   `;
