@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="admin.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <!-- Login Overlay -->
@@ -80,27 +82,37 @@
               <input type="text" name="notes" placeholder="Ex: Bergamote, Poivre Rose, Cèdre" required>
             </div>
             <div class="form-group full-width pricing-stock-section">
-              <label style="font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📦 Tailles, Prix et Stocks (Laissez vide si indisponible)</label>
+              <label
+                style="font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📦
+                Tailles, Prix et Stocks (Laissez vide si indisponible)</label>
               <div style="display: flex; gap: 20px;">
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 30ml</label>
-                  <input type="number" name="price_30ml" id="price_30ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_30ml" id="stock_30ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_30ml" id="price_30ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_30ml" id="stock_30ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 50ml</label>
-                  <input type="number" name="price_50ml" id="price_50ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_50ml" id="stock_50ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_50ml" id="price_50ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_50ml" id="stock_50ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 75ml</label>
-                  <input type="number" name="price_75ml" id="price_75ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_75ml" id="stock_75ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_75ml" id="price_75ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_75ml" id="stock_75ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 100ml</label>
-                  <input type="number" name="price_100ml" id="price_100ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_100ml" id="stock_100ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_100ml" id="price_100ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_100ml" id="stock_100ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
               </div>
             </div>
@@ -111,12 +123,14 @@
             <div class="form-group full-width">
               <label>Image Principale (Téléversement Cloudinary)</label>
               <input type="file" name="image" accept="image/*">
-              <small style="color: #666; font-style: italic;">*Optionnel si une galerie est fournie, obligatoire sinon.</small>
+              <small style="color: #666; font-style: italic;">*Optionnel si une galerie est fournie, obligatoire
+                sinon.</small>
             </div>
             <div class="form-group full-width">
               <label>Galerie Médias (Images et Vidéos supplémentaires)</label>
               <input type="file" name="media" accept="image/*,video/*" multiple>
-              <small style="color: #666; font-style: italic;">*Vous pouvez sélectionner plusieurs fichiers en même temps (Photos, MP4...)</small>
+              <small style="color: #666; font-style: italic;">*Vous pouvez sélectionner plusieurs fichiers en même temps
+                (Photos, MP4...)</small>
             </div>
           </div>
           <div class="form-actions">
@@ -167,27 +181,37 @@
               <input type="text" name="notes" id="edit-notes" required>
             </div>
             <div class="form-group full-width pricing-stock-section">
-              <label style="font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📦 Tailles, Prix et Stocks (Laissez vide si indisponible)</label>
+              <label
+                style="font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">📦
+                Tailles, Prix et Stocks (Laissez vide si indisponible)</label>
               <div style="display: flex; gap: 20px;">
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 30ml</label>
-                  <input type="number" name="price_30ml" id="edit_price_30ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_30ml" id="edit_stock_30ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_30ml" id="edit_price_30ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_30ml" id="edit_stock_30ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 50ml</label>
-                  <input type="number" name="price_50ml" id="edit_price_50ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_50ml" id="edit_stock_50ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_50ml" id="edit_price_50ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_50ml" id="edit_stock_50ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 75ml</label>
-                  <input type="number" name="price_75ml" id="edit_price_75ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_75ml" id="edit_stock_75ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_75ml" id="edit_price_75ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_75ml" id="edit_stock_75ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
                 <div style="flex: 1; text-align: center;">
                   <label style="font-size: 12px; margin-bottom: 8px;">Taille 100ml</label>
-                  <input type="number" name="price_100ml" id="edit_price_100ml" placeholder="Prix (€)" style="margin-bottom: 10px; text-align: center;">
-                  <input type="number" name="stock_100ml" id="edit_stock_100ml" placeholder="Stock" style="text-align: center;">
+                  <input type="number" name="price_100ml" id="edit_price_100ml" placeholder="Prix (MAD)"
+                    style="margin-bottom: 10px; text-align: center;">
+                  <input type="number" name="stock_100ml" id="edit_stock_100ml" placeholder="Stock"
+                    style="text-align: center;">
                 </div>
               </div>
             </div>
@@ -210,7 +234,8 @@
             <div class="form-group full-width">
               <label>Ajouter à la Galerie Médias (Images et Vidéos supplémentaires)</label>
               <input type="file" name="media" accept="image/*,video/*" multiple>
-              <small style="color: #666; font-style: italic;">*Les nouveaux fichiers seront ajoutés à la galerie existante du parfum.</small>
+              <small style="color: #666; font-style: italic;">*Les nouveaux fichiers seront ajoutés à la galerie
+                existante du parfum.</small>
             </div>
           </div>
           <div class="form-actions">
@@ -245,7 +270,8 @@
           <h2>Codes Promos</h2>
         </div>
         <form id="addPromoForm" style="display: flex; gap: 15px; margin-bottom: 30px; align-items: center;">
-          <input type="text" id="promoCodeInput" placeholder="CODE (ex: SOLDES20)" required style="text-transform: uppercase;">
+          <input type="text" id="promoCodeInput" placeholder="CODE (ex: SOLDES20)" required
+            style="text-transform: uppercase;">
           <input type="number" id="promoPercentageInput" placeholder="% de Réduction" required min="1" max="100">
           <button type="submit" class="btn" style="padding: 10px 20px;">Créer le code</button>
         </form>
@@ -268,4 +294,5 @@
 
   <script src="admin.js?v=2"></script>
 </body>
+
 </html>

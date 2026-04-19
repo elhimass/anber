@@ -93,7 +93,7 @@ async function fetchAdminProducts() {
         <td><img src="${p.image}" class="prod-img" alt="${p.name}"></td>
         <td><strong>${p.name}</strong><br><small>${p.sub}</small></td>
         <td>${p.collectionName || p.category}</td>
-        <td>${displayPrice} €</td>
+        <td>${displayPrice} MAD</td>
         <td>
           <button class="action-btn edit-btn" style="background-color: #b89758; color: white; border: none; margin-right: 5px; cursor: pointer; padding: 5px 10px; border-radius: 4px;" data-id="${p.id}">Modifier</button>
           <button class="action-btn delete-btn" data-id="${p.id}">Supprimer</button>
@@ -117,7 +117,7 @@ async function fetchAdminProducts() {
       btn.addEventListener('click', (e) => {
         const id = parseInt(e.target.getAttribute('data-id'));
         const product = currentProducts.find(p => p.id === id);
-        if(product) {
+        if (product) {
           document.getElementById('edit-id').value = product.id;
           document.getElementById('edit-name').value = product.name;
           document.getElementById('edit-slug').value = product.slug;
@@ -126,7 +126,7 @@ async function fetchAdminProducts() {
           document.getElementById('edit-sub').value = product.sub || '';
           document.getElementById('edit-desc').value = product.desc || '';
           document.getElementById('edit-notes').value = product.notes ? product.notes.join(', ') : '';
-          
+
           document.getElementById('edit_price_30ml').value = '';
           document.getElementById('edit_price_50ml').value = '';
           document.getElementById('edit_price_75ml').value = '';
@@ -135,7 +135,7 @@ async function fetchAdminProducts() {
           document.getElementById('edit_stock_50ml').value = '';
           document.getElementById('edit_stock_75ml').value = '';
           document.getElementById('edit_stock_100ml').value = '';
-          
+
           if (product.prices) {
             for (const [size, price] of Object.entries(product.prices)) {
               const input = document.getElementById(`edit_price_${size}`);
@@ -148,14 +148,14 @@ async function fetchAdminProducts() {
               if (input) input.value = stockVal;
             }
           }
-          
+
           document.getElementById('edit-badge').value = product.badge || '';
-          
+
           // Logique de galerie existante
           const galleryPreview = document.getElementById('edit-gallery-preview');
           const remainingImagesInput = document.getElementById('edit-remaining-images');
           galleryPreview.innerHTML = ''; // reset
-          
+
           // On copie le tableau pour pouvoir le manipuler
           let currentImages = product.images ? [...product.images] : [];
           if (currentImages.length === 0 && product.image) currentImages.push(product.image);
@@ -164,67 +164,67 @@ async function fetchAdminProducts() {
           remainingImagesInput.value = JSON.stringify(currentImages);
 
           const renderGallery = () => {
-             galleryPreview.innerHTML = '';
-             remainingImagesInput.value = JSON.stringify(currentImages);
-             
-             if(currentImages.length === 0) {
-                 galleryPreview.innerHTML = '<p style="color:#666; font-size:12px;">Aucun média (La galerie est vide).</p>';
-                 return;
-             }
+            galleryPreview.innerHTML = '';
+            remainingImagesInput.value = JSON.stringify(currentImages);
 
-             currentImages.forEach((imgUrl, index) => {
-                const wrapper = document.createElement('div');
-                wrapper.style.position = 'relative';
-                wrapper.style.width = '80px';
-                wrapper.style.height = '80px';
-                wrapper.style.border = '1px solid #ddd';
-                wrapper.style.borderRadius = '4px';
-                wrapper.style.overflow = 'hidden';
+            if (currentImages.length === 0) {
+              galleryPreview.innerHTML = '<p style="color:#666; font-size:12px;">Aucun média (La galerie est vide).</p>';
+              return;
+            }
 
-                let mediaEl;
-                if(imgUrl.match(/\.(mp4|webm|ogg)$/i) || imgUrl.includes('video/upload')) {
-                   mediaEl = document.createElement('video');
-                   mediaEl.src = imgUrl;
-                   mediaEl.muted = true;
-                } else {
-                   mediaEl = document.createElement('img');
-                   mediaEl.src = imgUrl;
-                }
-                mediaEl.style.width = '100%';
-                mediaEl.style.height = '100%';
-                mediaEl.style.objectFit = 'cover';
+            currentImages.forEach((imgUrl, index) => {
+              const wrapper = document.createElement('div');
+              wrapper.style.position = 'relative';
+              wrapper.style.width = '80px';
+              wrapper.style.height = '80px';
+              wrapper.style.border = '1px solid #ddd';
+              wrapper.style.borderRadius = '4px';
+              wrapper.style.overflow = 'hidden';
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.innerHTML = '×';
-                deleteBtn.style.position = 'absolute';
-                deleteBtn.style.top = '2px';
-                deleteBtn.style.right = '2px';
-                deleteBtn.style.background = 'red';
-                deleteBtn.style.color = 'white';
-                deleteBtn.style.border = 'none';
-                deleteBtn.style.borderRadius = '50%';
-                deleteBtn.style.width = '20px';
-                deleteBtn.style.height = '20px';
-                deleteBtn.style.cursor = 'pointer';
-                deleteBtn.style.fontSize = '14px';
-                deleteBtn.style.lineHeight = '14px';
-                deleteBtn.style.padding = '0';
-                deleteBtn.title = 'Supprimer ce média';
+              let mediaEl;
+              if (imgUrl.match(/\.(mp4|webm|ogg)$/i) || imgUrl.includes('video/upload')) {
+                mediaEl = document.createElement('video');
+                mediaEl.src = imgUrl;
+                mediaEl.muted = true;
+              } else {
+                mediaEl = document.createElement('img');
+                mediaEl.src = imgUrl;
+              }
+              mediaEl.style.width = '100%';
+              mediaEl.style.height = '100%';
+              mediaEl.style.objectFit = 'cover';
 
-                deleteBtn.onclick = (e) => {
-                   e.preventDefault();
-                   currentImages.splice(index, 1);
-                   renderGallery();
-                };
+              const deleteBtn = document.createElement('button');
+              deleteBtn.innerHTML = '×';
+              deleteBtn.style.position = 'absolute';
+              deleteBtn.style.top = '2px';
+              deleteBtn.style.right = '2px';
+              deleteBtn.style.background = 'red';
+              deleteBtn.style.color = 'white';
+              deleteBtn.style.border = 'none';
+              deleteBtn.style.borderRadius = '50%';
+              deleteBtn.style.width = '20px';
+              deleteBtn.style.height = '20px';
+              deleteBtn.style.cursor = 'pointer';
+              deleteBtn.style.fontSize = '14px';
+              deleteBtn.style.lineHeight = '14px';
+              deleteBtn.style.padding = '0';
+              deleteBtn.title = 'Supprimer ce média';
 
-                wrapper.appendChild(mediaEl);
-                wrapper.appendChild(deleteBtn);
-                galleryPreview.appendChild(wrapper);
-             });
+              deleteBtn.onclick = (e) => {
+                e.preventDefault();
+                currentImages.splice(index, 1);
+                renderGallery();
+              };
+
+              wrapper.appendChild(mediaEl);
+              wrapper.appendChild(deleteBtn);
+              galleryPreview.appendChild(wrapper);
+            });
           };
 
           renderGallery();
-          
+
           editProductSection.style.display = 'block';
           window.scrollTo(0, 0);
         }
@@ -246,7 +246,7 @@ addProductForm.addEventListener('submit', async (e) => {
 
   try {
     const formData = new FormData(addProductForm);
-    
+
     const sizes = [];
     const prices = {};
     const stock = {};
@@ -366,26 +366,26 @@ const promosSection = document.getElementById('promosSection');
 navProducts.addEventListener('click', (e) => {
   e.preventDefault();
   navProducts.classList.add('active');
-  if(navPromos) navPromos.classList.remove('active');
-  
+  if (navPromos) navPromos.classList.remove('active');
+
   promosSection.style.display = 'none';
-  if(productsTableSection) productsTableSection.style.display = 'block';
+  if (productsTableSection) productsTableSection.style.display = 'block';
   addProductSection.style.display = 'none';
   editProductSection.style.display = 'none';
   fetchAdminProducts();
 });
 
-if(navPromos) {
+if (navPromos) {
   navPromos.addEventListener('click', (e) => {
     e.preventDefault();
     navPromos.classList.add('active');
     navProducts.classList.remove('active');
-    
-    if(productsTableSection) productsTableSection.style.display = 'none';
+
+    if (productsTableSection) productsTableSection.style.display = 'none';
     addProductSection.style.display = 'none';
     editProductSection.style.display = 'none';
     promosSection.style.display = 'block';
-    
+
     fetchPromos();
   });
 }
@@ -396,18 +396,18 @@ if(navPromos) {
 
 async function fetchPromos() {
   const tbody = document.getElementById('promosTableBody');
-  if(!tbody) return;
+  if (!tbody) return;
   tbody.innerHTML = '<tr><td colspan="3" class="text-center">Chargement...</td></tr>';
-  
+
   try {
     const res = await fetch(`${API_URL}/admin/promos`);
     const data = await res.json();
-    
+
     if (data.length === 0) {
       tbody.innerHTML = '<tr><td colspan="3" class="text-center">Aucun code promo trouvé.</td></tr>';
       return;
     }
-    
+
     tbody.innerHTML = data.map(promo => `
       <tr>
         <td><strong>${promo.code}</strong></td>
@@ -423,12 +423,12 @@ async function fetchPromos() {
 }
 
 const addPromoForm = document.getElementById('addPromoForm');
-if(addPromoForm) {
+if (addPromoForm) {
   addPromoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
     const discountPercentage = document.getElementById('promoPercentageInput').value;
-    
+
     try {
       const res = await fetch(`${API_URL}/admin/promos`, {
         method: 'POST',
@@ -436,25 +436,25 @@ if(addPromoForm) {
         body: JSON.stringify({ code, discountPercentage })
       });
       const data = await res.json();
-      if(data.success) {
+      if (data.success) {
         addPromoForm.reset();
         fetchPromos();
       } else {
         alert(data.error || "Erreur de création");
       }
-    } catch(err) {
+    } catch (err) {
       alert("Erreur réseau");
     }
   });
 }
 
 async function deletePromo(id) {
-  if(!confirm("Supprimer ce code promo ?")) return;
+  if (!confirm("Supprimer ce code promo ?")) return;
   try {
     const res = await fetch(`${API_URL}/admin/promos/${id}`, { method: 'DELETE' });
     const data = await res.json();
-    if(data.success) fetchPromos();
-  } catch(err) {
+    if (data.success) fetchPromos();
+  } catch (err) {
     alert("Erreur réseau");
   }
 }
