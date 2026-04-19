@@ -266,9 +266,9 @@ function createInvoice(formData, cartItemsSelected, productsList, totalAmount) {
              .text(product.name, 60, y)
              .text(item.size, 270, y)
              .text(item.quantity.toString(), 350, y, { width: 50, align: 'center' })
-             .text(`${unitPrice} €`, 400, y, { width: 70, align: 'right' })
+             .text(`${unitPrice} MAD`, 400, y, { width: 70, align: 'right' })
              .font('Helvetica-Bold')
-             .text(`${itemTotal} €`, 480, y, { width: 60, align: 'right' })
+             .text(`${itemTotal} MAD`, 480, y, { width: 60, align: 'right' })
              .font('Helvetica');
           
           y += 25;
@@ -287,7 +287,7 @@ function createInvoice(formData, cartItemsSelected, productsList, totalAmount) {
          .text('TOTAL À PAYER', doc.page.width - 230, y + 5)
          .fillColor(goldColor)
          .fontSize(16)
-         .text(`${totalAmount} €`, 400, y + 3, { width: 130, align: 'right' });
+         .text(`${totalAmount} MAD`, 400, y + 3, { width: 130, align: 'right' });
 
       // Pied de page
       doc.fillColor('#999999')
@@ -377,7 +377,7 @@ app.post('/api/submit-order', async (req, res) => {
               <span style="color: #666;">Contenance: ${item.size}</span>
             </td>
             <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">x ${item.quantity}</td>
-            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;"><strong>${itemTotal} €</strong></td>
+            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: right;"><strong>${itemTotal} MAD</strong></td>
           </tr>
         `;
     });
@@ -413,7 +413,7 @@ app.post('/api/submit-order', async (req, res) => {
               ${itemsHtml}
               <tr>
                 <td colspan="3" style="padding: 15px 10px; text-align: right; background-color: #fcfbf9;"><strong>Total à Payer:</strong></td>
-                <td style="padding: 15px 10px; text-align: right; background-color: #fcfbf9;"><strong style="font-size: 18px; color: #b89758;">${totalAmount} €</strong></td>
+                <td style="padding: 15px 10px; text-align: right; background-color: #fcfbf9;"><strong style="font-size: 18px; color: #b89758;">${totalAmount} MAD</strong></td>
               </tr>
             </table>
           </div>

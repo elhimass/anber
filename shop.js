@@ -41,7 +41,7 @@ function initPage() {
 }
 
 function formatPrice(value) {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 }).format(value);
 }
 
 function createImageHTML(product) {
@@ -429,7 +429,7 @@ function renderCart() {
             </div>
             <div class="summary-row" id="promoRow" style="display:none; color: var(--gold); font-weight: 500;">
               <span>Code Avantage</span>
-              <span id="cartPromoDiscount">-0 €</span>
+              <span id="cartPromoDiscount">-0 MAD</span>
             </div>
             <div class="summary-row">
               <span>Frais de livraison</span>
