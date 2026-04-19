@@ -3140,7 +3140,7 @@ button:focus,
    ========================================================= */
 .cart-layout {
   display: grid;
-  grid-template-columns: 58% 38%;
+  grid-template-columns: 52% 44%;
   justify-content: space-between;
   width: 100%;
   max-width: 100%;
@@ -3321,6 +3321,7 @@ button:focus,
   gap: 30px;
   position: sticky;
   top: 120px;
+  width: 100%;
 }
 
 .glass-panel {
