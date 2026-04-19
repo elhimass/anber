@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Compte VIP — Maison Anber</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="icon" type="image/png" href="./assets/logo/logo.png">
+  <style>
+    /* Styling spécifique pour la page compte (Account Page) */
+    .account-section {
+      padding: 100px 20px;
+      min-height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-color); /* Dark gold theme */
+    }
+    
+    .account-container {
+      width: 100%;
+      max-width: 500px;
+      background: var(--surface-color);
+      padding: 40px;
+      border: 1px solid rgba(197, 160, 89, 0.2);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .account-title {
+      font-family: var(--font-primary);
+      color: var(--gold);
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .account-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      color: var(--text-color);
+      border-radius: 4px;
+      font-family: var(--font-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .toggle-form span {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: #ff4d4d;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      min-height: 20px;
+    }
+
+    /* VIP Card Styling */
+    .vip-dashboard {
+      display: none; /* hidden by default, shown if logged in */
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .vip-card-wrapper {
+      perspective: 1000px;
+      margin-bottom: 40px;
+    }
+
+    .vip-card {
+      width: 100%;
+      max-width: 450px;
+      height: 260px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
+      border: 1px solid rgba(197, 160, 89, 0.4);
+      border-radius: 16px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 40px rgba(197, 160, 89, 0.05);
+      transition: transform 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .vip-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0) 60%);
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+
+    .vip-card:hover {
+      transform: scale(1.02) translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 20px rgba(197, 160, 89, 0.2);
+    }
+
+    .vip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+      padding-bottom: 15px;
+    }
+
+    .vip-logo {
+      font-family: var(--font-primary);
+      font-size: 1.5rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .vip-badge {
+      background: rgba(197, 160, 89, 0.1);
+      color: var(--gold);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(197, 160, 89, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .vip-body {
+      margin-top: 20px;
+    }
+
+    .vip-name {
+      font-size: 1.4rem;
+      color: var(--text-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+    }
+
+    .vip-points-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .vip-points {
+      font-size: 2.5rem;
+      color: var(--gold);
+      font-family: var(--font-primary);
+      line-height: 1;
+      margin-top: 5px;
+      text-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+    }
+
+    .benefits-list {
+      margin-top: 30px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .benefits-list h3 {
+      color: var(--gold);
+      margin-bottom: 15px;
+      font-family: var(--font-primary);
+    }
+
+    .benefits-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .benefits-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      color: var(--text-color);
+    }
+
+    .benefits-list li::before {
+      content: '✓';
+      color: var(--gold);
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-color);
+      padding: 10px 20px;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+  </style>
+</head>
+<body data-page="account">
+  <nav>
+    <div class="page-wrapper nav-inner">
+      <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">ANBER</a>
+      <div class="nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Boutique</a>
+        <a href="about.html">À Propos</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="account.html" class="active">✨ Mon Compte</a>
+        <a href="cart.html" class="nav-cart">
+          <span>Panier</span>
+          <span id="cartBadge" class="cart-badge"></span>
+        </a>
+      </div>
+      <button class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="account-section">
+      
+      <!-- CONTENEUR DU FORMULAIRE (Non Connecté) -->
+      <div class="account-container" id="authContainer">
+        <!-- Formulaire de Connexion -->
+        <div id="loginFormSection">
+          <h1 class="account-title">Connexion Privilège</h1>
+          <p class="account-subtitle">Accédez à votre espace exclusif Maison Anber.</p>
+          <div id="loginError" class="error-msg"></div>
+          
+          <form id="loginForm">
+            <div class="form-group">
+              <label>Adresse E-mail</label>
+              <input type="email" id="loginEmail" required />
+            </div>
+            <div class="form-group">
+              <label>Mot de passe</label>
+              <input type="password" id="loginPassword" required />
+            </div>
+            <button type="submit" class="btn" style="width: 100%">Se connecter</button>
+          </form>
+          
+          <div class="toggle-form">
+            Nouveau client ? <span onclick="toggleAuth('register')">Créer un compte</span>
+          </div>
+        </div>
+
+        <!-- Formulaire d'Inscription -->
+        <div id="registerFormSection" style="display: none;">
+          <h1 class="account-title">Créer un Compte</h1>
+          <p class="account-subtitle">Rejoignez le cercle privé de la Maison Anber.</p>
+          <div id="registerError" class="error-msg"></div>
+          
+          <form id="registerForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" id="regFirstName" required />
+              </div>
+              <div class="form-group">
+                <label>Nom</label>
+                <input type="text" id="regLastName" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Adresse E-mail</label>
+              <input type="email" id="regEmail" required />
+            </div>
+            <div class="form-group">
+              <label>Mot de passe</label>
+              <input type="password" id="regPassword" required />
+            </div>
+            <button type="submit" class="btn" style="width: 100%">Créer mon accès VIP</button>
+          </form>
+          
+          <div class="toggle-form">
+            Déjà client privilégié ? <span onclick="toggleAuth('login')">Se connecter</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENEUR DU DASHBOARD VIP (Connecté) -->
+      <div class="vip-dashboard" id="vipDashboard">
+        <h1 class="account-title" style="margin-bottom: 40px;">Votre Espace Personnel</h1>
+        
+        <div class="vip-card-wrapper">
+          <div class="vip-card">
+            <div class="vip-header">
+              <div class="vip-logo">ANBER</div>
+              <div class="vip-badge" id="vipLevel">Membre Or</div>
+            </div>
+            <div class="vip-body">
+              <div class="vip-name" id="vipName">Prénom Nom</div>
+              <div class="vip-points-label">Solde de Points</div>
+              <div class="vip-points" id="vipPoints">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="benefits-list">
+          <h3>Vos Avantages Exclusifs</h3>
+          <ul id="vipBenefits">
+            <li>Livraison offerte en 24h/48h</li>
+            <li>Accès anticipé aux ventes privées</li>
+            <li>1 Point fidélité gagné pour chaque 100 Dirhams dépensés</li>
+          </ul>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="page-wrapper footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <a href="index.html"><img src="./assets/logo/logo.png" alt="Anber" class="footer-logo"></a>
+        <p class="footer-tagline">L'art du parfum réinventé</p>
+        <p class="footer-description">Découvrez une collection exclusive de fragrances d'exception, soigneusement sélectionnées pour révéler votre essence unique.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-section">
+          <h4>Navigation</h4>
+          <a href="products.html">Boutique</a>
+          <a href="about.html">À Propos</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Service Client</h4>
+          <a href="contact.html">Nous contacter</a>
+          <a href="faq.html">Questions fréquentes</a>
+          <a href="account.html">Mon espace VIP</a>
+          <a href="cart.html">Mon panier</a>
+        </div>
+        <div class="footer-section">
+          <h4>Légal</h4>
+          <a href="legal.html#cgv">Conditions générales</a>
+          <a href="legal.html#privacy">Politique de confidentialité</a>
+          <a href="legal.html#mentions">Mentions légales</a>
+          <a href="legal.html#cgv">CGV</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-text">© 2026 Anber — Maison de parfums de luxe. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script src="shop.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>

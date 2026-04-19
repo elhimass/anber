@@ -332,11 +332,17 @@ async function submitOrder(e) {
     submitBtn.disabled = true;
 
     try {
+      const token = localStorage.getItem('anber_token');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${API_URL}/submit-order`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: JSON.stringify({ formData, cartItems: cart, promoCode: activePromoCode })
       });
 
@@ -655,6 +661,7 @@ function initMobileMenu() {
       <a href="about.html">À Propos</a>
       <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
+      <a href="account.html">✨ Mon Compte</a>
       <a href="cart.html" class="nav-cart">
         <span>Panier</span>
         <span id="cartBadgeMobile" class="cart-badge"></span>
