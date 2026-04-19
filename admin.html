@@ -110,7 +110,13 @@
             </div>
             <div class="form-group full-width">
               <label>Image Principale (Téléversement Cloudinary)</label>
-              <input type="file" name="image" accept="image/*" required>
+              <input type="file" name="image" accept="image/*">
+              <small style="color: #666; font-style: italic;">*Optionnel si une galerie est fournie, obligatoire sinon.</small>
+            </div>
+            <div class="form-group full-width">
+              <label>Galerie Médias (Images et Vidéos supplémentaires)</label>
+              <input type="file" name="media" accept="image/*,video/*" multiple>
+              <small style="color: #666; font-style: italic;">*Vous pouvez sélectionner plusieurs fichiers en même temps (Photos, MP4...)</small>
             </div>
           </div>
           <div class="form-actions">
@@ -192,6 +198,11 @@
             <div class="form-group full-width">
               <label>Nouvelle Image Principale (Laisser vide pour conserver l'actuelle)</label>
               <input type="file" name="image" accept="image/*">
+            </div>
+            <div class="form-group full-width">
+              <label>Ajouter à la Galerie Médias (Images et Vidéos supplémentaires)</label>
+              <input type="file" name="media" accept="image/*,video/*" multiple>
+              <small style="color: #666; font-style: italic;">*Les nouveaux fichiers seront ajoutés à la galerie existante du parfum.</small>
             </div>
           </div>
           <div class="form-actions">
