@@ -226,6 +226,11 @@ function openProduct(productId) {
 
 // Gestion du panier avec localStorage
 function addToCart(productId, size, quantity = 1) {
+  if (!localStorage.getItem('anber_token')) {
+    showNotification('Connectez-vous pour ajouter au panier');
+    setTimeout(() => { window.location.href = 'account.html'; }, 1500);
+    return;
+  }
   const product = products.find((item) => item.id === productId);
   if (!product) return;
 
