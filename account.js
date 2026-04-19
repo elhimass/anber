@@ -5,7 +5,7 @@ const API_BASE = window.location.hostname === '127.0.0.1' || window.location.hos
   : 'https://backend-anber.onrender.com/api';
 
 // Replace with your Google Cloud Console Client ID
-const GOOGLE_CLIENT_ID = ''; // ex: '1234567890-abc.apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID = '536648074224-6v684nitrdgave4n9cd5ovgk4396g8em.apps.googleusercontent.com';
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
