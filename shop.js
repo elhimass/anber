@@ -525,7 +525,7 @@ function renderCart() {
           </div>
 
           <div id="paymentMethodsContainer" class="payment-action-container">
-            <button class="btn btn-full-width checkout-submit-btn" onclick="document.getElementById('checkoutFormContainer').style.display='block'; document.getElementById('paymentMethodsContainer').style.display='none';">Procéder au paiement securely</button>
+            <button class="btn btn-full-width checkout-submit-btn" onclick="showCheckoutForm()">Procéder au paiement</button>
             <a class="btn-outline-gold" href="products.html" style="width:100%; text-align:center; display:inline-flex; align-items:center; justify-content:center; margin-top:12px; height:50px;">Retour à la collection</a>
           </div>
         </div>
